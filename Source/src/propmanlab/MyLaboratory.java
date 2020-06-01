@@ -18,29 +18,59 @@
 package propmanlab;
 
 import ca.uqac.lif.labpal.Laboratory;
+import ca.uqac.lif.labpal.LatexNamer;
+import ca.uqac.lif.labpal.Region;
+import ca.uqac.lif.labpal.TitleNamer;
+import propmanlab.macros.LabStats;
 
 public class MyLaboratory extends Laboratory
 {
   /**
    * The maximum length of a trace
    */
-  public static final int MAX_TRACE_LENGTH = 10000;
-  
+  public static int MAX_TRACE_LENGTH = 10000;
+
   /**
    * The interval, in number of events, between updates of the experiment's
    * measurements
    */
-  public static final int s_eventStep = 10;
-  
-	@Override
-	public void setup()
-	{
-		// Write your setup code here
-	}
-	
-	public static void main(String[] args)
-	{
-		// Nothing else to do here
-		MyLaboratory.initialize(args, MyLaboratory.class);
-	}
+  public static int s_eventStep = 10;
+
+  /**
+   * A nicknamer
+   */
+  public static transient LatexNamer s_nicknamer = new LatexNamer();
+
+  /**
+   * A title namer
+   */
+  public static transient TitleNamer s_titleNamer = new TitleNamer();
+
+  /**
+   * An experiment factory
+   */
+  public transient StreamExperimentFactory m_factory = new StreamExperimentFactory(this);
+
+  @Override
+  public void setup()
+  {
+    setTitle("Benchmark for propositional machines in BeepBeep");
+    setDoi("TODO");
+    setAuthor("Rania Taleb, Sylvain Hallé");
+
+    Region big_r = new Region();
+
+    // Macros
+    add(new LabStats(this));
+  }
+
+  /**
+   * Initializes the lab
+   * @param args Command line arguments
+   */
+  public static void main(String[] args)
+  {
+    // Nothing else to do here
+    MyLaboratory.initialize(args, MyLaboratory.class);
+  }
 }
