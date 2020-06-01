@@ -4,6 +4,11 @@ import ca.uqac.lif.labpal.Laboratory;
 
 public class MyLaboratory extends Laboratory
 {
+  /**
+   * The maximum length of a trace
+   */
+  public static final int MAX_TRACE_LENGTH = 10000;
+  
 	@Override
 	public void setup()
 	{

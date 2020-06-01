@@ -172,9 +172,9 @@ public class StreamExperiment<T> extends Experiment
       event_count++;
     }
     long end = System.currentTimeMillis();
-    write(THROUGHPUT, (1000f * (float) LineageLab.MAX_TRACE_LENGTH) / ((float) (end - start)));
+    write(THROUGHPUT, (1000f * (float) MyLaboratory.MAX_TRACE_LENGTH) / ((float) (end - start)));
     write(MAX_MEMORY, max_mem);
-    write(MEM_PER_EVENT, max_mem / LineageLab.MAX_TRACE_LENGTH);
+    write(MEM_PER_EVENT, max_mem / MyLaboratory.MAX_TRACE_LENGTH);
   }
 
   /**
@@ -249,7 +249,7 @@ public class StreamExperiment<T> extends Experiment
     {
       return 0f;
     }
-    return factor * ((float) LineageLab.MAX_TRACE_LENGTH) / m_predictedThroughput;
+    return factor * ((float) MyLaboratory.MAX_TRACE_LENGTH) / m_predictedThroughput;
   }
   
   /**
