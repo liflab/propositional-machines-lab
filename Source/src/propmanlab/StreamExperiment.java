@@ -20,15 +20,12 @@ package propmanlab;
 import ca.uqac.lif.azrael.PrintException;
 import ca.uqac.lif.azrael.size.SizePrinter;
 import ca.uqac.lif.cep.Connector;
-import ca.uqac.lif.cep.EventTracker;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.Pullable;
 import ca.uqac.lif.cep.Pushable;
 import ca.uqac.lif.cep.tmf.BlackHole;
-import ca.uqac.lif.json.JsonFalse;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonNumber;
-import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.Experiment;
 import ca.uqac.lif.labpal.ExperimentException;
 import propmanlab.source.BoundedSource;
@@ -58,11 +55,6 @@ public class StreamExperiment<T> extends Experiment
    * The source from which the input events will originate
    */
   protected transient BoundedSource<T> m_source;
-  
-  /**
-   * The event tracker (if any) whose size must be measured
-   */
-  protected transient EventTracker m_tracker;
 
   /**
    * The interval at which the experiment updates its data on
@@ -90,19 +82,11 @@ public class StreamExperiment<T> extends Experiment
    * An Azrael printer used to evaluate memory usage
    */
   protected transient SizePrinter m_sizePrinter;
-
-  /**
-   * Creates a new empty stream experiment
-   */
-  public StreamExperiment()
-  {
-    this(false);
-  }
   
   /**
    * Creates a new empty stream experiment
    */
-  public StreamExperiment(boolean lineage)
+  public StreamExperiment()
   {
     super();
     m_sizePrinter = new SizePrinter();
@@ -112,15 +96,6 @@ public class StreamExperiment<T> extends Experiment
     describe(LINEAGE, "Whether the experiment uses data lineage");
     describe(PROPERTY, "The name of the query being evaluated on the event log");
     describe(MAX_MEMORY, "The maximum amount of memory consumed during the evaluation of the property (in bytes)");
-    if (lineage)
-    {
-      setInput(LINEAGE, JsonTrue.instance);
-      describe(MEM_PER_EVENT, "The average amount of memory consumed for each input event (in bytes)");
-    }
-    else
-    {
-      setInput(LINEAGE, JsonFalse.instance);
-    }
     JsonList x = new JsonList();
     x.add(0);
     write(LENGTH, x);
@@ -154,8 +129,6 @@ public class StreamExperiment<T> extends Experiment
         {
           m_sizePrinter.reset();
           mem_p = ((Number) m_sizePrinter.print(m_processor)).longValue();
-          m_sizePrinter.reset();
-          mem_t = ((Number) m_sizePrinter.print(m_tracker)).longValue();
         } 
         catch (PrintException e) 
         {
@@ -184,15 +157,6 @@ public class StreamExperiment<T> extends Experiment
   public void setProcessor(Processor p)
   {
     m_processor = p;
-  }
-  
-  /**
-   * Sets the event tracker that is being used in this experiment (if any)
-   * @param t The tracker, or <tt>null</tt>
-   */
-  public void setTracker(/*@ nullable @*/ EventTracker t)
-  {
-    m_tracker = t;
   }
 
   /**

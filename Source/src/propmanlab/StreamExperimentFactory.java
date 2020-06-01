@@ -17,31 +17,34 @@
  */
 package propmanlab;
 
-import ca.uqac.lif.cep.EventTracker;
-import ca.uqac.lif.cep.Processor;
+import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.json.JsonFalse;
+import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.ExperimentFactory;
 import ca.uqac.lif.labpal.Region;
 
+import static propmanlab.AccessControlledStreamExperiment.PROXY;
+import static propmanlab.AccessControlledStreamExperiment.WITH_PROXY;
 import static propmanlab.StreamExperiment.PROPERTY;
 
 /**
  * An {@link ExperimentFactory} that produces {@link StreamExperiment}s.
  */
 @SuppressWarnings("rawtypes")
-public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,StreamExperiment>
+public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,AccessControlledStreamExperiment>
 {
   public StreamExperimentFactory(MyLaboratory lab)
   {
-    super(lab, StreamExperiment.class);
+    super(lab, AccessControlledStreamExperiment.class);
   }
 
   @Override
-  protected StreamExperiment<?> createExperiment(Region r)
+  protected AccessControlledStreamExperiment createExperiment(Region r)
   {
-    StreamExperiment<?> exp = new StreamExperiment();
+    AccessControlledStreamExperiment exp = new AccessControlledStreamExperiment();
     setSource(r, exp);
     exp.setEventStep(MyLaboratory.s_eventStep);
-    Processor p = setProcessor(exp, r);
+    PropositionalMachine p = setProcessorAndProxy(exp, r);
     if (p == null)
     {
       return null;
@@ -53,7 +56,6 @@ public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,Stre
     return exp;
   }
   
-  @SuppressWarnings("unchecked")
   protected void setSource(Region r, StreamExperiment exp)
   {
     String property_name = r.getString(PROPERTY);
@@ -64,25 +66,44 @@ public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,Stre
     // TODO set source
   }
 
-  protected Processor setProcessor(StreamExperiment exp, Region r)
+  protected PropositionalMachine setProcessorAndProxy(AccessControlledStreamExperiment exp, Region r)
   {
     String property_name = r.getString(PROPERTY);
-    Processor p = null;
-    EventTracker t = null;
-    exp.setTracker(t);
+    PropositionalMachine prop = null;
     if (property_name == null)
     {
       return null;
     }
     // TODO set processor
-    exp.setProcessor(p);
-    return p;
+    PropositionalMachine proxy = null;
+    if (r.get(WITH_PROXY) instanceof JsonTrue)
+    {
+      String proxy_name = r.getString(PROXY);
+      // TODO set proxy
+    }
+    exp.setProcessors(proxy, prop);
+    return prop;
   }
 
   protected String getPropertyDescription(Region r)
   {
     String property_name = r.getString(PROPERTY);
     if (property_name == null)
+    {
+      return null;
+    }
+    // TODO set description
+    return null;
+  }
+  
+  protected String getProxyDescription(Region r)
+  {
+    if (r.get(WITH_PROXY) instanceof JsonFalse)
+    {
+      return null;
+    }
+    String proxy_name = r.getString(PROXY);
+    if (proxy_name == null)
     {
       return null;
     }
