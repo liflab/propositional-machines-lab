@@ -9,6 +9,12 @@ public class MyLaboratory extends Laboratory
    */
   public static final int MAX_TRACE_LENGTH = 10000;
   
+  /**
+   * The interval, in number of events, between updates of the experiment's
+   * measurements
+   */
+  public static final int s_eventStep = 10;
+  
 	@Override
 	public void setup()
 	{
