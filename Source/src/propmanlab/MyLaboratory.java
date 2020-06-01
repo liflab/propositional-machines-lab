@@ -1,4 +1,4 @@
-package mylab;
+package propmanlab;
 
 import ca.uqac.lif.labpal.Laboratory;
 
