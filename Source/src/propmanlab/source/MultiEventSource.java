@@ -48,6 +48,6 @@ public abstract class MultiEventSource extends BoundedSource<MultiEvent>
   @Override
   public String printEvent(MultiEvent e)
   {
-    return e.toString();
+    return e.toString(m_variables);
   }
 }
