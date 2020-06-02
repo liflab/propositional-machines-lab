@@ -39,7 +39,7 @@ public class StreamExperiment<T> extends Experiment
   public static transient final String TOOL = "Tool";
   public static transient final String TIME = "Time";
   public static transient final String LENGTH = "Length";
-  public static transient final String LINEAGE = "Lineage";
+  public static transient final String TRACE_LENGTH = "Trace length";
   public static transient final String PROPERTY = "Query";
   public static transient final String MEMORY = "Memory";
   public static transient final String MEM_PER_EVENT = "Memory per event";
@@ -93,7 +93,7 @@ public class StreamExperiment<T> extends Experiment
     describe(THROUGHPUT, "The average number of events processed per second");
     describe(TIME, "Cumulative running time (in ms)");
     describe(LENGTH, "Number of events processed");
-    describe(LINEAGE, "Whether the experiment uses data lineage");
+    describe(TRACE_LENGTH, "The total length of the trace processed");
     describe(PROPERTY, "The name of the query being evaluated on the event log");
     describe(MAX_MEMORY, "The maximum amount of memory consumed during the evaluation of the property (in bytes)");
     JsonList x = new JsonList();
@@ -148,6 +148,7 @@ public class StreamExperiment<T> extends Experiment
     write(THROUGHPUT, (1000f * (float) MyLaboratory.MAX_TRACE_LENGTH) / ((float) (end - start)));
     write(MAX_MEMORY, max_mem);
     write(MEM_PER_EVENT, max_mem / MyLaboratory.MAX_TRACE_LENGTH);
+    write(TRACE_LENGTH, m_source.getEventBound());
   }
 
   /**

@@ -1,0 +1,2 @@
+#! /bin/bash
+curl --url https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/machine_temperature_system_failure.csv --output Source/src/propmanlab/data/temperature/machine_temperature_system_failure.csv

@@ -13,6 +13,7 @@
 /doc/
 Source/lib/
 Source/dep/
+Source/src/propmanlab/data/
 /tests/
 
 # Top-level jar, but not jars in subfolders (if any)
