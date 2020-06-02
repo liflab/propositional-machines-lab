@@ -22,7 +22,7 @@ import ca.uqac.lif.labpal.Random;
 /**
  * A source of randomly-generated events.
  */
-public abstract class RandomSource<T> extends BoundedSource<T>
+public abstract class RandomMultiEventSource extends MultiEventSource
 {
   /**
    * The random number generator used to generate the numbers
@@ -34,9 +34,9 @@ public abstract class RandomSource<T> extends BoundedSource<T>
    * @param r A random generator
    * @param num_events The number of events to produce
    */
-  public RandomSource(Random r, int num_events)
+  public RandomMultiEventSource(Random r, int num_events, String ... variables)
   {
-    super(num_events);
+    super(num_events, variables);
     m_random = r;
   }
 }
