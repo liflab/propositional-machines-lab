@@ -50,6 +50,16 @@ public class MyLaboratory extends Laboratory
    * An experiment factory
    */
   public transient StreamExperimentFactory m_factory = new StreamExperimentFactory(this);
+  
+  /**
+   * The name of the region dimension "problem instance"
+   */
+  public static transient final String PROB_INSTANCE = "Problem instance";
+  
+  /**
+   * The name of the problem instance "simple"
+   */
+  public static transient final String SIMPLE = "Simple";
 
   @Override
   public void setup()
@@ -59,6 +69,13 @@ public class MyLaboratory extends Laboratory
     setAuthor("Rania Taleb, Sylvain Hallé");
 
     Region big_r = new Region();
+    big_r.add(PROB_INSTANCE, SIMPLE);
+    
+    // Plot entropy for a single trace
+    for (Region r : big_r.all(PROB_INSTANCE))
+    {
+      
+    }
 
     // Macros
     add(new LabStats(this));
@@ -73,4 +90,5 @@ public class MyLaboratory extends Laboratory
     // Nothing else to do here
     MyLaboratory.initialize(args, MyLaboratory.class);
   }
+  
 }

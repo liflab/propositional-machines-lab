@@ -22,6 +22,8 @@ import ca.uqac.lif.json.JsonFalse;
 import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.ExperimentFactory;
 import ca.uqac.lif.labpal.Region;
+import propmanlab.scenarios.simple.SimpleMonitor;
+import propmanlab.scenarios.simple.SimpleProxy;
 
 import static propmanlab.AccessControlledStreamExperiment.PROXY;
 import static propmanlab.AccessControlledStreamExperiment.WITH_PROXY;
@@ -55,7 +57,7 @@ public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,Acce
     exp.setPredictedThroughput(guessThroughput(r));
     return exp;
   }
-  
+
   protected void setSource(Region r, StreamExperiment exp)
   {
     String property_name = r.getString(PROPERTY);
@@ -70,16 +72,25 @@ public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,Acce
   {
     String property_name = r.getString(PROPERTY);
     PropositionalMachine prop = null;
-    if (property_name == null)
+    switch (property_name)
+    {
+    case SimpleMonitor.NAME:
+      prop = new SimpleMonitor();
+      break;
+    }
+    if (prop == null)
     {
       return null;
     }
-    // TODO set processor
     PropositionalMachine proxy = null;
     if (r.get(WITH_PROXY) instanceof JsonTrue)
     {
       String proxy_name = r.getString(PROXY);
-      // TODO set proxy
+      switch (proxy_name)
+      {
+      case SimpleProxy.NAME:
+        proxy = new SimpleProxy();
+      }
     }
     exp.setProcessors(proxy, prop);
     return prop;
@@ -95,7 +106,7 @@ public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,Acce
     // TODO set description
     return null;
   }
-  
+
   protected String getProxyDescription(Region r)
   {
     if (r.get(WITH_PROXY) instanceof JsonFalse)
@@ -146,4 +157,6 @@ public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,Acce
     }*/
     return 0f;
   }
+
+
 }
