@@ -23,6 +23,8 @@ import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.Pullable;
 import ca.uqac.lif.cep.Pushable;
+import ca.uqac.lif.cep.propman.AccessControlledMonitor;
+import ca.uqac.lif.cep.propman.PropositionalMachine;
 import ca.uqac.lif.cep.tmf.BlackHole;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonNumber;
@@ -45,11 +47,16 @@ public class StreamExperiment<T> extends Experiment
   public static transient final String MEM_PER_EVENT = "Memory per event";
   public static transient final String THROUGHPUT = "Throughput";
   public static transient final String MAX_MEMORY = "Max memory";
-
+  
   /**
-   * The processor that is being monitored in this experiment
+   * The proxy that is being used in this experiment
    */
-  protected transient Processor m_processor;
+  protected transient PropositionalMachine m_proxy;
+  
+  /**
+   * The monitor that is being used in this experiment
+   */
+  protected transient PropositionalMachine m_monitor;
 
   /**
    * The source from which the input events will originate
@@ -112,9 +119,18 @@ public class StreamExperiment<T> extends Experiment
   {
     // Setup processor chain
     Pullable s_p = m_source.getPullableOutput();
-    Pushable t_p = m_processor.getPushableInput();
+    Processor proc = null;
+    if (m_proxy != null)
+    {
+      proc = new AccessControlledMonitor(m_proxy, m_monitor);
+    }
+    else
+    {
+      proc = m_monitor;
+    }
+    Pushable t_p = proc.getPushableInput();
     BlackHole hole = new BlackHole();
-    Connector.connect(m_processor, hole);
+    Connector.connect(proc, hole);
     long start = System.currentTimeMillis();
     int event_count = 0;
     int source_length = m_source.getEventBound();
@@ -128,7 +144,7 @@ public class StreamExperiment<T> extends Experiment
         try 
         {
           m_sizePrinter.reset();
-          mem_p = ((Number) m_sizePrinter.print(m_processor)).longValue();
+          mem_p = ((Number) m_sizePrinter.print(proc)).longValue();
         } 
         catch (PrintException e) 
         {
@@ -152,12 +168,21 @@ public class StreamExperiment<T> extends Experiment
   }
 
   /**
-   * Sets the processor that is being monitored in this experiment
-   * @param p The processor
+   * Sets the monitor that is being used in this experiment
+   * @param m The monitor
    */
-  public void setProcessor(Processor p)
+  public void setMonitor(PropositionalMachine m)
   {
-    m_processor = p;
+    m_monitor = m;
+  }
+  
+  /**
+   * Sets the proxy that is being used in this experiment
+   * @param p The proxy
+   */
+  public void setProxy(PropositionalMachine p)
+  {
+    m_proxy = p;
   }
 
   /**

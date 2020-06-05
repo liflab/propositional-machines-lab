@@ -26,7 +26,6 @@ import ca.uqac.lif.cep.tmf.Pump;
 import ca.uqac.lif.labpal.Random;
 import ca.uqac.lif.synthia.random.RandomBoolean;
 import ca.uqac.lif.synthia.util.Constant;
-import propmanlab.source.RandomConcreteMultiEventSource;
 
 public class Demo
 {

@@ -22,12 +22,16 @@ import ca.uqac.lif.json.JsonFalse;
 import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.ExperimentFactory;
 import ca.uqac.lif.labpal.Region;
+import java.util.HashMap;
+import java.util.Map;
+import propmanlab.scenarios.Scenario;
 import propmanlab.scenarios.simple.SimpleMonitor;
 import propmanlab.scenarios.simple.SimpleProxy;
 
 import static propmanlab.AccessControlledStreamExperiment.PROXY;
 import static propmanlab.AccessControlledStreamExperiment.WITH_PROXY;
 import static propmanlab.StreamExperiment.PROPERTY;
+import static propmanlab.scenarios.Scenario.SCENARIO;
 
 /**
  * An {@link ExperimentFactory} that produces {@link StreamExperiment}s.
@@ -35,128 +39,36 @@ import static propmanlab.StreamExperiment.PROPERTY;
 @SuppressWarnings("rawtypes")
 public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,AccessControlledStreamExperiment>
 {
+  protected Map<String,Scenario> m_scenarios;
+
   public StreamExperimentFactory(MyLaboratory lab)
   {
     super(lab, AccessControlledStreamExperiment.class);
+    m_scenarios = new HashMap<String,Scenario>();
+  }
+
+  public StreamExperimentFactory addScenario(String name, Scenario s)
+  {
+    m_scenarios.put(name, s);
+    return this;
   }
 
   @Override
   protected AccessControlledStreamExperiment createExperiment(Region r)
   {
-    AccessControlledStreamExperiment exp = new AccessControlledStreamExperiment();
-    setSource(r, exp);
-    exp.setEventStep(MyLaboratory.s_eventStep);
-    PropositionalMachine p = setProcessorAndProxy(exp, r);
-    if (p == null)
+    String scenario_s = r.getString(SCENARIO);
+    if (!m_scenarios.containsKey(scenario_s))
     {
       return null;
     }
-    exp.setInput(PROPERTY, r.getString(PROPERTY));
-    exp.setPropertyDescription(getPropertyDescription(r));
-    exp.setImageUrl(getImageUrl(r));
-    exp.setPredictedThroughput(guessThroughput(r));
+    Scenario scenario = m_scenarios.get(scenario_s);
+    if (scenario == null)
+    {
+      return null;
+    }
+    AccessControlledStreamExperiment exp = new AccessControlledStreamExperiment();
+    scenario.setup(exp, r);
+    exp.setEventStep(MyLaboratory.s_eventStep);
     return exp;
   }
-
-  protected void setSource(Region r, StreamExperiment exp)
-  {
-    String property_name = r.getString(PROPERTY);
-    if (property_name == null)
-    {
-      return;
-    }
-    // TODO set source
-  }
-
-  protected PropositionalMachine setProcessorAndProxy(AccessControlledStreamExperiment exp, Region r)
-  {
-    String property_name = r.getString(PROPERTY);
-    PropositionalMachine prop = null;
-    switch (property_name)
-    {
-    case SimpleMonitor.NAME:
-      prop = new SimpleMonitor();
-      break;
-    }
-    if (prop == null)
-    {
-      return null;
-    }
-    PropositionalMachine proxy = null;
-    if (r.get(WITH_PROXY) instanceof JsonTrue)
-    {
-      String proxy_name = r.getString(PROXY);
-      switch (proxy_name)
-      {
-      case SimpleProxy.NAME:
-        proxy = new SimpleProxy();
-      }
-    }
-    exp.setProcessors(proxy, prop);
-    return prop;
-  }
-
-  protected String getPropertyDescription(Region r)
-  {
-    String property_name = r.getString(PROPERTY);
-    if (property_name == null)
-    {
-      return null;
-    }
-    // TODO set description
-    return null;
-  }
-
-  protected String getProxyDescription(Region r)
-  {
-    if (r.get(WITH_PROXY) instanceof JsonFalse)
-    {
-      return null;
-    }
-    String proxy_name = r.getString(PROXY);
-    if (proxy_name == null)
-    {
-      return null;
-    }
-    // TODO set description
-    return null;
-  }
-
-  protected String getImageUrl(Region r)
-  {
-    String property_name = r.getString(PROPERTY);
-    if (property_name == null)
-    {
-      return null;
-    }
-    /*if (property_name.compareTo(ParcelsInTransit.NAME) == 0)
-    {
-      // No picture for this one
-      return "/resource/ParcelsInTransit.png";
-    }*/
-    return null;
-  }
-
-  /**
-   * Estimates the throughput of an experiment.
-   * These throughput values are rough estimates based on values
-   * collected when running the experiments.
-   * @param r The region representing an experiment
-   * @return The estimated throughput
-   */
-  protected float guessThroughput(Region r)
-  {
-    String property_name = r.getString(PROPERTY);
-    if (property_name == null)
-    {
-      return 0f;
-    }
-    /*if (property_name.compareTo(DecreasingDistance.NAME) == 0)
-    {
-      return 300000f;
-    }*/
-    return 0f;
-  }
-
-
 }

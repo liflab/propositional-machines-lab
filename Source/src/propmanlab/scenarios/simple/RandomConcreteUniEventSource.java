@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package propmanlab.source;
+package propmanlab.scenarios.simple;
 
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.labpal.Random;

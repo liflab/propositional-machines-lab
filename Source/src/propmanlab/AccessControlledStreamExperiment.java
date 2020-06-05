@@ -17,11 +17,9 @@
  */
 package propmanlab;
 
-import ca.uqac.lif.cep.propman.AccessControlledMonitor;
 import ca.uqac.lif.cep.propman.MultiEvent;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
-import ca.uqac.lif.json.JsonFalse;
-import ca.uqac.lif.json.JsonTrue;
+
+import static propmanlab.scenarios.Scenario.SCENARIO;
 
 public class AccessControlledStreamExperiment extends StreamExperiment<MultiEvent>
 {
@@ -31,22 +29,8 @@ public class AccessControlledStreamExperiment extends StreamExperiment<MultiEven
   public AccessControlledStreamExperiment()
   {
     super();
+    describe(SCENARIO, "The name of the general scenario this experiment represents");
     describe(PROXY, "The access proxy used in this experiment");
     describe(WITH_PROXY, "Whether an access proxy is applied on the monitor");
-  }
-  
-  public void setProcessors(PropositionalMachine proxy, PropositionalMachine monitor)
-  {
-    if (proxy == null)
-    {
-      super.setProcessor(monitor);
-      setInput(WITH_PROXY, JsonFalse.instance);
-    }
-    else
-    {
-      AccessControlledMonitor acm = new AccessControlledMonitor(proxy, monitor);
-      super.setProcessor(acm);
-      setInput(WITH_PROXY, JsonTrue.instance);
-    }
   }
 }
