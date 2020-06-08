@@ -54,7 +54,7 @@ public class MyLaboratory extends Laboratory
    * The interval, in number of events, between updates of the experiment's
    * measurements
    */
-  public static int s_eventStep = 10;
+  public static int s_eventStep = 100;
 
   /**
    * A nicknamer
@@ -119,14 +119,14 @@ public class MyLaboratory extends Laboratory
           add(et);
           et.add(e_with);
           et.add(e_without);
-          TransformedTable tt = new TransformedTable(new ExpandAsColumns(WITH_PROXY, TIME), et);
+          TransformedTable tt = new TransformedTable(new Composition(new ExpandAsColumns(WITH_PROXY, TIME), new RenameTrueFalse(LENGTH)), et);
           tt.setTitle("Impact of proxy on throughput for " + r.getString(SCENARIO));
           s_nicknamer.setNickname(tt, r, "tTp", "");
           add(tt);
           Scatterplot plot = new Scatterplot(tt);
           plot.setTitle("Impact of proxy on throughput for " + r.getString(SCENARIO));
           plot.setCaption(Axis.X, LENGTH).setCaption(Axis.Y, TIME);
-          s_nicknamer.setNickname(plot, r, "tTp", "");
+          s_nicknamer.setNickname(plot, r, "pTp", "");
           add(plot);
         }
         {
@@ -136,7 +136,7 @@ public class MyLaboratory extends Laboratory
           add(et);
           et.add(e_with);
           et.add(e_without);
-          TransformedTable tt = new TransformedTable(new ExpandAsColumns(WITH_PROXY, MEMORY), et);
+          TransformedTable tt = new TransformedTable(new Composition(new ExpandAsColumns(WITH_PROXY, MEMORY), new RenameTrueFalse(LENGTH)), et);
           tt.setTitle("Impact of proxy on memory for " + r.getString(SCENARIO));
           s_nicknamer.setNickname(tt, r, "tMem", "");
           add(tt);
@@ -147,11 +147,11 @@ public class MyLaboratory extends Laboratory
           add(plot);
         }
       }
-      TransformedTable tt_comparison_tp = new TransformedTable(new ExpandAsColumns(WITH_PROXY, THROUGHPUT), t_comparison_tp);
+      TransformedTable tt_comparison_tp = new TransformedTable(new Composition(new ExpandAsColumns(WITH_PROXY, THROUGHPUT), new RenameTrueFalse(SCENARIO)), t_comparison_tp);
       tt_comparison_tp.setTitle("Impact of proxy on throughput");
       tt_comparison_tp.setNickname("tImpactThroughput");
       add(tt_comparison_tp);
-      TransformedTable tt_comparison_mem = new TransformedTable(new ExpandAsColumns(WITH_PROXY, MEMORY), t_comparison_mem);
+      TransformedTable tt_comparison_mem = new TransformedTable(new Composition(new ExpandAsColumns(WITH_PROXY, MEMORY), new RenameTrueFalse(SCENARIO)), t_comparison_mem);
       tt_comparison_mem.setTitle("Impact of proxy on memory");
       tt_comparison_mem.setNickname("tImpactMemory");
       add(tt_comparison_mem);

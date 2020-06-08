@@ -242,6 +242,15 @@ public class StreamExperiment<T> extends Experiment
     return factor * ((float) MyLaboratory.MAX_TRACE_LENGTH) / m_predictedThroughput;
   }
   
+  @Override
+  public int countDataPoints()
+  {
+    int points = 3; // Throughput, max memory and mem per event
+    points += ((JsonList) read(TIME)).size();
+    points += ((JsonList) read(MEMORY)).size();
+    return points;
+  }
+  
   /**
    * Adds a new reading to the set of data points collected by the experiment
    * @param length

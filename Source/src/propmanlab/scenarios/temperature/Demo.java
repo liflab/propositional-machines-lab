@@ -35,14 +35,15 @@ public class Demo
   public static void main(String[] args) throws FileNotFoundException
   {
     TemperatureIsUnder tis = new TemperatureIsUnder(74, 70, 1);
-    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, 5, 2);
-    /*
+    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, 100, 5);
+    System.out.println(otwi.getStateCount());
+    System.out.println(otwi.getTransitionCount());
     DotMachineRenderer renderer = new DotMachineRenderer();
     PrintStream ps = new PrintStream(new FileOutputStream(new File("/tmp/mach.dot")));
     renderer.setNickname(tis, "f");
     renderer.render(ps, otwi);
     ps.close();
-    */
+    
     SimulatedTemperatureSource source = new SimulatedTemperatureSource(70, 90, 1, 74, 74, 74, 78, 78, 78);
     StatelessPropositionalMachine proxy = new StatelessPropositionalMachine();
     proxy.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2, 20));
