@@ -22,19 +22,22 @@ import ca.uqac.lif.cep.propman.PropositionalMachine;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.random.RandomFloat;
 import propmanlab.AccessControlledStreamExperiment;
+import propmanlab.MyLaboratory;
 import propmanlab.scenarios.Scenario;
 
 public class CartScenario extends Scenario
 {
+  public static final transient String NAME = "Shopping Cart";
+  
   public CartScenario()
   {
-    super("Shopping Cart", "CartSource", "Load shedding", "Amazon Lifecycle");
+    super(NAME, "CartSource", "Load shedding", "Amazon Lifecycle");
   }
   
   @Override
   public Processor getSource(AccessControlledStreamExperiment e, Region r)
   {
-    CartEventSource src = new CartEventSource(1000, new RandomFloat());
+    CartEventSource src = new CartEventSource(MyLaboratory.MAX_TRACE_LENGTH, new RandomFloat());
     e.setSource(src);
     return src;
   }
@@ -42,8 +45,9 @@ public class CartScenario extends Scenario
   @Override
   public PropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
-    // TODO Auto-generated method stub
-    return null;
+    CartProxy proxy = new CartProxy(20);
+    e.setProxy(proxy);
+    return proxy;
   }
 
   @Override

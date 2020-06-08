@@ -29,7 +29,7 @@ public abstract class CartEvent
   /**
    * The number of distinct shopping items modeled by the scenario
    */
-  public static final transient int NUM_ITEMS = 5;
+  public static final transient int NUM_ITEMS = 1;
   
   /**
    * The valuation represented by this cart event

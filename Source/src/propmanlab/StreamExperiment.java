@@ -23,13 +23,16 @@ import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.Pullable;
 import ca.uqac.lif.cep.Pushable;
+import ca.uqac.lif.cep.ltl.Troolean.Value;
 import ca.uqac.lif.cep.propman.AccessControlledMonitor;
+import ca.uqac.lif.cep.propman.MultiMonitor.VerdictCount;
 import ca.uqac.lif.cep.propman.PropositionalMachine;
-import ca.uqac.lif.cep.tmf.BlackHole;
+import ca.uqac.lif.cep.tmf.SinkLast;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.labpal.Experiment;
 import ca.uqac.lif.labpal.ExperimentException;
+import java.math.BigInteger;
 import propmanlab.source.BoundedSource;
 
 /**
@@ -47,6 +50,7 @@ public class StreamExperiment<T> extends Experiment
   public static transient final String MEM_PER_EVENT = "Memory per event";
   public static transient final String THROUGHPUT = "Throughput";
   public static transient final String MAX_MEMORY = "Max memory";
+  public static transient final String NB_UNITRACES = "Number of uni-traces";
   
   /**
    * The proxy that is being used in this experiment
@@ -103,6 +107,7 @@ public class StreamExperiment<T> extends Experiment
     describe(TRACE_LENGTH, "The total length of the trace processed");
     describe(PROPERTY, "The name of the query being evaluated on the event log");
     describe(MAX_MEMORY, "The maximum amount of memory consumed during the evaluation of the property (in bytes)");
+    describe(NB_UNITRACES, "The base-10 logarithm of the number of uni-traces processed by the monitor");
     JsonList x = new JsonList();
     x.add(0);
     write(LENGTH, x);
@@ -129,7 +134,7 @@ public class StreamExperiment<T> extends Experiment
       proc = m_monitor;
     }
     Pushable t_p = proc.getPushableInput();
-    BlackHole hole = new BlackHole();
+    SinkLast hole = new SinkLast();
     Connector.connect(proc, hole);
     long start = System.currentTimeMillis();
     int event_count = 0;
@@ -165,6 +170,16 @@ public class StreamExperiment<T> extends Experiment
     write(MAX_MEMORY, max_mem);
     write(MEM_PER_EVENT, max_mem / MyLaboratory.MAX_TRACE_LENGTH);
     write(TRACE_LENGTH, m_source.getEventBound());
+    if (m_proxy == null)
+    {
+      write(NB_UNITRACES, 1);
+    }
+    else
+    {
+      VerdictCount vc = (VerdictCount) hole.getLast()[0];
+      BigInteger total = vc.get(Value.TRUE).add(vc.get(Value.INCONCLUSIVE)).add(vc.get(Value.FALSE));
+      write(NB_UNITRACES, (int) BigMath.logBigInteger(total));
+    }
   }
 
   /**

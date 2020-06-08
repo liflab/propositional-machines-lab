@@ -31,6 +31,9 @@ import ca.uqac.lif.mtnp.table.ExpandAsColumns;
 import ca.uqac.lif.mtnp.table.RenameColumns;
 import ca.uqac.lif.mtnp.table.TransformedTable;
 import propmanlab.macros.LabStats;
+import propmanlab.macros.MaxTraceLength;
+import propmanlab.macros.UniTraceCount;
+import propmanlab.scenarios.cart.CartScenario;
 import propmanlab.scenarios.simple.SimpleScenario;
 import propmanlab.scenarios.temperature.TemperatureThresholdScenario;
 
@@ -48,13 +51,13 @@ public class MyLaboratory extends Laboratory
   /**
    * The maximum length of a trace
    */
-  public static int MAX_TRACE_LENGTH = 10000;
+  public static int MAX_TRACE_LENGTH = 100000;
 
   /**
    * The interval, in number of events, between updates of the experiment's
    * measurements
    */
-  public static int s_eventStep = 100;
+  public static int s_eventStep = 1000;
 
   /**
    * A nicknamer
@@ -82,10 +85,11 @@ public class MyLaboratory extends Laboratory
     {
       m_factory.addScenario(SimpleScenario.NAME, new SimpleScenario(getRandom()));
       m_factory.addScenario(TemperatureThresholdScenario.NAME, new TemperatureThresholdScenario());
+      m_factory.addScenario(CartScenario.NAME, new CartScenario());
     }
 
     Region big_r = new Region();
-    big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME);
+    big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, CartScenario.NAME);
     big_r.add(WITH_PROXY, JsonTrue.instance, JsonFalse.instance);
 
     // Impact of proxy
@@ -112,6 +116,7 @@ public class MyLaboratory extends Laboratory
         t_comparison_tp.add(e_without);
         t_comparison_mem.add(e_with);
         t_comparison_mem.add(e_without);
+        add(new UniTraceCount(this, e_with));
         {
           // Impact on time
           ExperimentTable et = new ExperimentTable(WITH_PROXY, LENGTH, TIME);
@@ -159,6 +164,7 @@ public class MyLaboratory extends Laboratory
 
     // Macros
     add(new LabStats(this));
+    add(new MaxTraceLength(this, MAX_TRACE_LENGTH));
   }
 
   /**

@@ -17,7 +17,9 @@
  */
 package propmanlab.scenarios.cart;
 
+import ca.uqac.lif.cep.Pullable;
 import ca.uqac.lif.cep.propman.DotMachineRenderer;
+import ca.uqac.lif.synthia.random.RandomFloat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,12 +36,17 @@ public class Demo
     PrintStream ps = new PrintStream(new FileOutputStream(new File("/tmp/cart.dot")));
     renderer.render(ps, monitor);
     ps.close();
-    for (Map.Entry<CartLifecycleMonitor.CartState,Integer> e : monitor.map.entrySet())
+    /*for (Map.Entry<CartLifecycleMonitor.CartState,Integer> e : monitor.map.entrySet())
     {
       System.out.println(e);
-    }
+    }*/
     System.out.println(monitor.getStateCount());
     System.out.println(monitor.getTransitionCount());
+    CartEventSource ces = new CartEventSource(20, new RandomFloat());
+    Pullable p = ces.getPullableOutput();
+    while (p.hasNext())
+    {
+      System.out.println(p.next());
+    }
   }
-
 }

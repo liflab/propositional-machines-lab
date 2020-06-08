@@ -23,6 +23,7 @@ import ca.uqac.lif.labpal.Random;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.random.RandomBoolean;
 import propmanlab.AccessControlledStreamExperiment;
+import propmanlab.MyLaboratory;
 import propmanlab.scenarios.Scenario;
 import propmanlab.source.RandomMultiEventSource;
 
@@ -43,7 +44,7 @@ public class SimpleScenario extends Scenario
   {
     RandomBoolean rand = new RandomBoolean();
     String[] vars = new String[] {"a", "b", "c"};
-    RandomMultiEventSource source = new RandomConcreteUniEventSource(m_random, 1000, rand, vars);
+    RandomMultiEventSource source = new RandomConcreteUniEventSource(m_random, MyLaboratory.MAX_TRACE_LENGTH, rand, vars);
     e.setSource(source);
     return source;
   }

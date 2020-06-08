@@ -112,7 +112,7 @@ public class CartEventSource extends MultiEventSource
       {
         options.addAll(getSearchResponses());
       }
-      if (m_lastAction.compareTo(SearchRequest.NAME) != 0)
+      if (m_lastAction.compareTo(SearchRequest.NAME) == 0)
       {
         if (m_hasCart && m_lastAction.compareTo(SearchResponse.NAME) == 0)
         {
@@ -134,12 +134,16 @@ public class CartEventSource extends MultiEventSource
       }
     }
     ElementPicker<CartEvent> picker = new ElementPicker<CartEvent>(m_floatSource);
-    float prob = 1 / options.size();
+    float prob = 1 / (float) options.size();
     for (CartEvent e : options)
     {
       picker.add(e, prob);
     }
     CartEvent chosen = picker.pick();
+    if (chosen == null)
+    {
+      System.out.println("ERROR");
+    }
     updateState(chosen);
     return new CartMultiEvent(chosen);
   }
@@ -183,31 +187,41 @@ public class CartEventSource extends MultiEventSource
     if (e instanceof LoginEvent)
     {
       m_logged = true;
+      m_lastAction = LoginEvent.NAME;
     }
     if (e instanceof LogoutEvent)
     {
       m_logged = false;
       m_hasCart = false;
       m_cartItems.clear();
+      m_lastAction = LogoutEvent.NAME;
     }
     if (e instanceof CartCreate)
     {
       m_hasCart = true;
+      m_lastAction = CartCreate.NAME;
     }
     if (e instanceof CartAdd)
     {
       Set<Integer> added_items = CartEvent.itemSet(e.getValuation());
       m_cartItems.addAll(added_items);
+      m_lastAction = CartAdd.NAME;
     }
     if (e instanceof CartRemove)
     {
       Set<Integer> removed_items = CartEvent.itemSet(e.getValuation());
       m_cartItems.removeAll(removed_items);
+      m_lastAction = CartRemove.NAME;
     }
     if (e instanceof SearchResponse)
     {
       Set<Integer> response_items = CartEvent.itemSet(e.getValuation());
       m_responseItems.addAll(response_items);
+      m_lastAction = SearchResponse.NAME;
+    }
+    if (e instanceof SearchRequest)
+    {
+      m_lastAction = SearchRequest.NAME;
     }
   }
 

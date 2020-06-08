@@ -19,6 +19,7 @@ package propmanlab.scenarios.cart;
 
 import ca.uqac.lif.cep.propman.MultiEvent;
 import ca.uqac.lif.cep.propman.Valuation;
+import ca.uqac.lif.cep.propman.ValuationIterator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,11 @@ import java.util.Set;
  */
 public class CartMultiEvent implements MultiEvent
 {
+  /**
+   * A single visible instance of the "ALL" cart multi-event
+   */
+  public static final AllCartMultiEvent ALL = new AllCartMultiEvent();
+  
   /**
    * The set of cart events contained in this multi-event
    */
@@ -71,6 +77,10 @@ public class CartMultiEvent implements MultiEvent
     if (!(e instanceof CartMultiEvent))
     {
       throw new UnsupportedOperationException("A CartMultiEvent may only intersect with another CartMultiEvent");
+    }
+    if (e instanceof AllCartMultiEvent)
+    {
+      return getValuations();
     }
     CartMultiEvent cme = (CartMultiEvent) e;
     Set<CartEvent> common = new HashSet<CartEvent>();
@@ -121,5 +131,38 @@ public class CartMultiEvent implements MultiEvent
     }
     out.append("}");
     return out.toString();
+  }
+  
+  public static class AllCartMultiEvent extends CartMultiEvent
+  {
+    protected static Set<Valuation> s_valuations = getAllValuations();
+    
+    public AllCartMultiEvent()
+    {
+      super();
+    }
+    
+    protected static Set<Valuation> getAllValuations()
+    {
+      Set<Valuation> vals = new HashSet<Valuation>();
+      ValuationIterator v_it = new ValuationIterator(CartEvent.getDomain());
+      while (v_it.hasNext())
+      {
+        vals.add(v_it.next());
+      }
+      return vals;
+    }
+    
+    @Override
+    public Set<Valuation> getValuations()
+    {
+      return s_valuations;
+    }
+    
+    @Override
+    public String toString()
+    {
+      return toString("*");
+    }
   }
 }
