@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package propmanlab.scenarios.cart;
+package propmanlab.scenarios.mplayer;
 
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.propman.PropositionalMachine;
@@ -25,19 +25,19 @@ import propmanlab.AccessControlledStreamExperiment;
 import propmanlab.MyLaboratory;
 import propmanlab.scenarios.RandomScenario;
 
-public class CartScenario extends RandomScenario<Float>
+public class MPlayerScenario extends RandomScenario<Float>
 {
-  public static final transient String NAME = "Shopping Cart";
+  public static final transient String NAME = "MPlayer";
   
-  public CartScenario(Picker<Float> float_source)
+  public MPlayerScenario(Picker<Float> float_source)
   {
-    super(NAME, "CartSource", "Load shedding", "Amazon Lifecycle", float_source);
+    super(NAME, "MPlayerSource", "Load shedding", "Property 1", float_source);
   }
   
   @Override
   public Processor getSource(AccessControlledStreamExperiment e, Region r)
   {
-    CartEventSource src = new CartEventSource(MyLaboratory.MAX_TRACE_LENGTH, m_picker);
+    MPlayerSource src = new MPlayerSource(MyLaboratory.MAX_TRACE_LENGTH, m_picker);
     e.setSource(src);
     return src;
   }
@@ -45,7 +45,7 @@ public class CartScenario extends RandomScenario<Float>
   @Override
   public PropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
-    CartProxy proxy = new CartProxy(20);
+    MPlayerProxy proxy = new MPlayerProxy(20, 15);
     e.setProxy(proxy);
     return proxy;
   }
@@ -53,9 +53,8 @@ public class CartScenario extends RandomScenario<Float>
   @Override
   public PropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
-    CartLifecycleMonitor mon = new CartLifecycleMonitor();
+    Property1 mon = new Property1();
     e.setMonitor(mon);
     return mon;
   }
-
 }

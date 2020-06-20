@@ -177,6 +177,10 @@ public class StreamExperiment<T> extends Experiment
     else
     {
       VerdictCount vc = (VerdictCount) hole.getLast()[0];
+      if (vc == null)
+      {
+        throw new ExperimentException("Multi-monitor verdict is null");
+      }
       BigInteger total = vc.get(Value.TRUE).add(vc.get(Value.INCONCLUSIVE)).add(vc.get(Value.FALSE));
       write(NB_UNITRACES, (int) BigMath.logBigInteger(total));
     }

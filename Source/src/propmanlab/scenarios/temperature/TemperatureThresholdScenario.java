@@ -24,23 +24,22 @@ import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.AffineTransform.AffineTransformFloat;
-import ca.uqac.lif.synthia.random.RandomFloat;
 import propmanlab.AccessControlledStreamExperiment;
-import propmanlab.scenarios.Scenario;
+import propmanlab.scenarios.RandomScenario;
 
-public class TemperatureThresholdScenario extends Scenario
+public class TemperatureThresholdScenario extends RandomScenario<Float>
 {
   public static final transient String NAME = "Tempreature Threshold";
   
-  public TemperatureThresholdScenario()
+  public TemperatureThresholdScenario(Picker<Float> picker)
   {
-    super(NAME, "Random", "Blur temperature (stateless)", "Temperature threshold within 100");
+    super(NAME, "Random", "Blur temperature (stateless)", "Temperature threshold within 100", picker);
   }
   
   @Override
   public Processor getSource(AccessControlledStreamExperiment e, Region r)
   {
-    Picker<Float> picker = new AffineTransformFloat(new RandomFloat(), 20, 70);
+    Picker<Float> picker = new AffineTransformFloat(m_picker, 20, 70);
     RandomTemperatureSource source = new RandomTemperatureSource(70, 90, 1, picker);
     e.setSource(source);
     return source;

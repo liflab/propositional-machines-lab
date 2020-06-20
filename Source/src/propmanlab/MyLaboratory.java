@@ -30,10 +30,14 @@ import ca.uqac.lif.mtnp.table.Composition;
 import ca.uqac.lif.mtnp.table.ExpandAsColumns;
 import ca.uqac.lif.mtnp.table.RenameColumns;
 import ca.uqac.lif.mtnp.table.TransformedTable;
+import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.random.RandomBoolean;
+import ca.uqac.lif.synthia.random.RandomFloat;
 import propmanlab.macros.LabStats;
 import propmanlab.macros.MaxTraceLength;
 import propmanlab.macros.UniTraceCount;
 import propmanlab.scenarios.cart.CartScenario;
+import propmanlab.scenarios.mplayer.MPlayerScenario;
 import propmanlab.scenarios.simple.SimpleScenario;
 import propmanlab.scenarios.temperature.TemperatureThresholdScenario;
 
@@ -81,15 +85,22 @@ public class MyLaboratory extends Laboratory
     setDoi("TODO");
     setAuthor("Rania Taleb, Sylvain Hallé");
     
+    // Setup of RNGs for the random experiments
+    RandomFloat random_float = new RandomFloat();
+    random_float.setSeed(getRandomSeed());
+    RandomBoolean random_boolean = new RandomBoolean();
+    random_boolean.setSeed(getRandomSeed());
+    
     // Factory setup: adding scenarios
     {
-      m_factory.addScenario(SimpleScenario.NAME, new SimpleScenario(getRandom()));
-      m_factory.addScenario(TemperatureThresholdScenario.NAME, new TemperatureThresholdScenario());
-      m_factory.addScenario(CartScenario.NAME, new CartScenario());
+      m_factory.addScenario(SimpleScenario.NAME, new SimpleScenario(random_boolean));
+      m_factory.addScenario(TemperatureThresholdScenario.NAME, new TemperatureThresholdScenario(random_float));
+      m_factory.addScenario(CartScenario.NAME, new CartScenario(random_float));
+      m_factory.addScenario(MPlayerScenario.NAME, new MPlayerScenario(random_float));
     }
 
     Region big_r = new Region();
-    big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, CartScenario.NAME);
+    big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, CartScenario.NAME, MPlayerScenario.NAME);
     big_r.add(WITH_PROXY, JsonTrue.instance, JsonFalse.instance);
 
     // Impact of proxy

@@ -19,32 +19,27 @@ package propmanlab.scenarios.simple;
 
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.propman.PropositionalMachine;
-import ca.uqac.lif.labpal.Random;
 import ca.uqac.lif.labpal.Region;
-import ca.uqac.lif.synthia.random.RandomBoolean;
+import ca.uqac.lif.synthia.Picker;
 import propmanlab.AccessControlledStreamExperiment;
 import propmanlab.MyLaboratory;
-import propmanlab.scenarios.Scenario;
+import propmanlab.scenarios.RandomScenario;
 import propmanlab.source.RandomMultiEventSource;
 
-public class SimpleScenario extends Scenario
+public class SimpleScenario extends RandomScenario<Boolean>
 {
   public static final transient String NAME = "Simple";
   
-  protected Random m_random;
-  
-  public SimpleScenario(Random random)
+  public SimpleScenario(Picker<Boolean> picker)
   {
-    super(NAME, "Random Booleans", SimpleProxy.NAME, SimpleMonitor.NAME);
-    m_random = random;
+    super(NAME, "Random Booleans", SimpleProxy.NAME, SimpleMonitor.NAME, picker);
   }
   
   @Override
   public Processor getSource(AccessControlledStreamExperiment e, Region r)
   {
-    RandomBoolean rand = new RandomBoolean();
     String[] vars = new String[] {"a", "b", "c"};
-    RandomMultiEventSource source = new RandomConcreteUniEventSource(m_random, MyLaboratory.MAX_TRACE_LENGTH, rand, vars);
+    RandomMultiEventSource source = new RandomConcreteUniEventSource(null, MyLaboratory.MAX_TRACE_LENGTH, m_picker, vars);
     e.setSource(source);
     return source;
   }

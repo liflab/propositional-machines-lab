@@ -17,26 +17,17 @@
  */
 package propmanlab;
 
-import ca.uqac.lif.cep.propman.PropositionalMachine;
-import ca.uqac.lif.json.JsonFalse;
-import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.ExperimentFactory;
 import ca.uqac.lif.labpal.Region;
 import java.util.HashMap;
 import java.util.Map;
 import propmanlab.scenarios.Scenario;
-import propmanlab.scenarios.simple.SimpleMonitor;
-import propmanlab.scenarios.simple.SimpleProxy;
 
-import static propmanlab.AccessControlledStreamExperiment.PROXY;
-import static propmanlab.AccessControlledStreamExperiment.WITH_PROXY;
-import static propmanlab.StreamExperiment.PROPERTY;
 import static propmanlab.scenarios.Scenario.SCENARIO;
 
 /**
  * An {@link ExperimentFactory} that produces {@link StreamExperiment}s.
  */
-@SuppressWarnings("rawtypes")
 public class StreamExperimentFactory extends ExperimentFactory<MyLaboratory,AccessControlledStreamExperiment>
 {
   protected Map<String,Scenario> m_scenarios;
