@@ -25,6 +25,7 @@ public class AccessControlledStreamExperiment extends StreamExperiment<MultiEven
 {
   public static transient final String PROXY = "Access proxy";
   public static transient final String WITH_PROXY = "With proxy";
+  public static transient final String BEST_EFFORT = "Best effort";
   
   public AccessControlledStreamExperiment()
   {
@@ -32,5 +33,6 @@ public class AccessControlledStreamExperiment extends StreamExperiment<MultiEven
     describe(SCENARIO, "The name of the general scenario this experiment represents");
     describe(PROXY, "The access proxy used in this experiment");
     describe(WITH_PROXY, "Whether an access proxy is applied on the monitor");
+    describe(BEST_EFFORT, "Whether the proxy represents the best effort or the current submission");
   }
 }

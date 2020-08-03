@@ -51,6 +51,9 @@ public class StreamExperiment<T> extends Experiment
   public static transient final String THROUGHPUT = "Throughput";
   public static transient final String MAX_MEMORY = "Max memory";
   public static transient final String NB_UNITRACES = "Number of uni-traces";
+  public static transient final String NB_UNITRACES_TRUE = "Number of true uni-traces";
+  public static transient final String NB_UNITRACES_FALSE = "Number of false uni-traces";
+  public static transient final String NB_UNITRACES_INCONCLUSIVE = "Number of inconclusive uni-traces";
   
   /**
    * The proxy that is being used in this experiment
@@ -108,6 +111,9 @@ public class StreamExperiment<T> extends Experiment
     describe(PROPERTY, "The name of the query being evaluated on the event log");
     describe(MAX_MEMORY, "The maximum amount of memory consumed during the evaluation of the property (in bytes)");
     describe(NB_UNITRACES, "The base-10 logarithm of the number of uni-traces processed by the monitor");
+    describe(NB_UNITRACES_TRUE, "The base-10 logarithm of the number of uni-traces processed by the monitor and associated to the true verdict");
+    describe(NB_UNITRACES_FALSE, "The base-10 logarithm of the number of uni-traces processed by the monitor and associated to the false verdict");
+    describe(NB_UNITRACES_INCONCLUSIVE, "The base-10 logarithm of the number of uni-traces processed by the monitor and associated to the inconclusive verdict");
     JsonList x = new JsonList();
     x.add(0);
     write(LENGTH, x);
@@ -181,8 +187,23 @@ public class StreamExperiment<T> extends Experiment
       {
         throw new ExperimentException("Multi-monitor verdict is null");
       }
-      BigInteger total = vc.get(Value.TRUE).add(vc.get(Value.INCONCLUSIVE)).add(vc.get(Value.FALSE));
+      BigInteger bi_true = vc.get(Value.TRUE);
+      BigInteger bi_false = vc.get(Value.FALSE);
+      BigInteger bi_inconclusive = vc.get(Value.INCONCLUSIVE);
+      BigInteger total = bi_true.add(bi_inconclusive).add(bi_false);
       write(NB_UNITRACES, (int) BigMath.logBigInteger(total));
+      if (!bi_true.equals(BigInteger.ZERO))
+      {
+        write(NB_UNITRACES_TRUE, (float) BigMath.logBigInteger(bi_true));
+      }
+      if (!bi_false.equals(BigInteger.ZERO))
+      {
+        write(NB_UNITRACES_FALSE, (float) BigMath.logBigInteger(bi_false));
+      }
+      if (!bi_inconclusive.equals(BigInteger.ZERO))
+      {
+        write(NB_UNITRACES_INCONCLUSIVE, (float) BigMath.logBigInteger(bi_inconclusive));
+      }
     }
   }
 

@@ -41,12 +41,16 @@ import propmanlab.scenarios.mplayer.MPlayerScenario;
 import propmanlab.scenarios.simple.SimpleScenario;
 import propmanlab.scenarios.temperature.TemperatureThresholdScenario;
 
+import static propmanlab.AccessControlledStreamExperiment.BEST_EFFORT;
 import static propmanlab.AccessControlledStreamExperiment.PROXY;
 import static propmanlab.AccessControlledStreamExperiment.WITH_PROXY;
 import static propmanlab.StreamExperiment.LENGTH;
 import static propmanlab.StreamExperiment.MEMORY;
 import static propmanlab.StreamExperiment.THROUGHPUT;
 import static propmanlab.StreamExperiment.TIME;
+import static propmanlab.StreamExperiment.NB_UNITRACES_FALSE;
+import static propmanlab.StreamExperiment.NB_UNITRACES_INCONCLUSIVE;
+import static propmanlab.StreamExperiment.NB_UNITRACES_TRUE;
 import static propmanlab.scenarios.Scenario.SCENARIO;
 
 @SuppressWarnings("unused")
@@ -102,6 +106,7 @@ public class MyLaboratory extends Laboratory
     Region big_r = new Region();
     big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, CartScenario.NAME, MPlayerScenario.NAME);
     big_r.add(WITH_PROXY, JsonTrue.instance, JsonFalse.instance);
+    big_r.add(BEST_EFFORT, JsonFalse.instance);
 
     // Impact of proxy
     {
@@ -171,6 +176,31 @@ public class MyLaboratory extends Laboratory
       tt_comparison_mem.setTitle("Impact of proxy on memory");
       tt_comparison_mem.setNickname("tImpactMemory");
       add(tt_comparison_mem);
+    }
+    
+    // Comparison to best existing model
+    {
+      Region new_big_r = new Region();
+      new_big_r.add(SCENARIO, SimpleScenario.NAME);
+      new_big_r.add(WITH_PROXY, JsonTrue.instance);
+      ExperimentTable et_best = new ExperimentTable(SCENARIO, NB_UNITRACES_TRUE, NB_UNITRACES_FALSE, NB_UNITRACES_INCONCLUSIVE);
+      ExperimentTable et_prox = new ExperimentTable(SCENARIO, NB_UNITRACES_TRUE, NB_UNITRACES_FALSE, NB_UNITRACES_INCONCLUSIVE);
+      for (Region r : new_big_r.all(SCENARIO))
+      {
+        Region r_best = new Region(r);
+        r_best.add(BEST_EFFORT, JsonTrue.instance);
+        AccessControlledStreamExperiment e_best = m_factory.get(r_best);
+        Region r_prox = new Region(r);
+        r_prox.add(BEST_EFFORT, JsonFalse.instance);
+        AccessControlledStreamExperiment e_prox = m_factory.get(r_prox);
+        if (e_best == null || e_prox == null)
+        {
+          continue;
+        }
+        et_best.add(e_best);
+        et_prox.add(e_prox);
+      }
+      add(et_best, et_prox);
     }
 
     // Macros

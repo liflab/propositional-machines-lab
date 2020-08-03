@@ -19,6 +19,8 @@ package propmanlab.scenarios.simple;
 
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.json.JsonFalse;
+import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.Picker;
 import propmanlab.AccessControlledStreamExperiment;
@@ -26,15 +28,18 @@ import propmanlab.MyLaboratory;
 import propmanlab.scenarios.RandomScenario;
 import propmanlab.source.RandomMultiEventSource;
 
+import static propmanlab.AccessControlledStreamExperiment.BEST_EFFORT;
+import static propmanlab.AccessControlledStreamExperiment.PROXY;
+
 public class SimpleScenario extends RandomScenario<Boolean>
 {
   public static final transient String NAME = "Simple";
-  
+
   public SimpleScenario(Picker<Boolean> picker)
   {
     super(NAME, "Random Booleans", SimpleProxy.NAME, SimpleMonitor.NAME, picker);
   }
-  
+
   @Override
   public Processor getSource(AccessControlledStreamExperiment e, Region r)
   {
@@ -47,7 +52,19 @@ public class SimpleScenario extends RandomScenario<Boolean>
   @Override
   public PropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
-    SimpleProxy p = new SimpleProxy();
+    PropositionalMachine p = null;
+    if (!r.hasDimension(BEST_EFFORT) || r.get(BEST_EFFORT) instanceof JsonFalse)
+    {
+      p = new SimpleProxy();
+      e.setInput(PROXY, SimpleProxy.NAME);
+      e.setInput(BEST_EFFORT, JsonFalse.instance);
+    }
+    else
+    {
+      p = new BestEffortProxy();
+      e.setInput(PROXY, BestEffortProxy.NAME);
+      e.setInput(BEST_EFFORT, JsonTrue.instance);
+    }
     e.setProxy(p);
     return p;
   }

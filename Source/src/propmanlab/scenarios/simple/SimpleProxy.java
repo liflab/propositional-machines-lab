@@ -8,7 +8,7 @@ import ca.uqac.lif.cep.propman.MultiEventFunction.Identity;
 
 public class SimpleProxy extends PropositionalMachine
 {
-  public static final transient String NAME = "Simple Proxy";
+  public static final transient String NAME = "Propositional machine";
   
   public SimpleProxy()
   {
