@@ -17,7 +17,7 @@
  */
 package propmanlab.scenarios.temperature;
 
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 
 import static ca.uqac.lif.cep.propman.MultiMonitor.EMPTY;
 import static ca.uqac.lif.cep.propman.MultiMonitor.EPSILON;
@@ -32,7 +32,7 @@ import ca.uqac.lif.cep.propman.MultiEvent;
  * 
  * @author Rania Taleb, Sylvain Hallé
  */
-public class OverThresholdWithinInterval extends PropositionalMachine
+public class OverThresholdWithinInterval extends ExplicitPropositionalMachine
 {
   /**
    * Creates a new instance of the property

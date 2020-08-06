@@ -18,7 +18,7 @@
 package propmanlab.scenarios.mplayer;
 
 import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.Picker;
 import propmanlab.AccessControlledStreamExperiment;
@@ -43,7 +43,7 @@ public class MPlayerScenario extends RandomScenario<Float>
   }
 
   @Override
-  public PropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
+  public ExplicitPropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
     MPlayerProxy proxy = new MPlayerProxy(20, 15);
     e.setProxy(proxy);
@@ -51,7 +51,7 @@ public class MPlayerScenario extends RandomScenario<Float>
   }
 
   @Override
-  public PropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
+  public ExplicitPropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
     Property1 mon = new Property1();
     e.setMonitor(mon);

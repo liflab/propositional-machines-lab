@@ -3,10 +3,10 @@ package propmanlab.scenarios.simple;
 import ca.uqac.lif.cep.propman.MergeVariables;
 import ca.uqac.lif.cep.propman.MultiEventFactory;
 import ca.uqac.lif.cep.propman.MultiEventFunction;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.MultiEventFunction.Identity;
 
-public class SimpleProxy extends PropositionalMachine
+public class SimpleProxy extends ExplicitPropositionalMachine
 {
   public static final transient String NAME = "Propositional machine";
   

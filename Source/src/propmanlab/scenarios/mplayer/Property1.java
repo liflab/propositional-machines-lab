@@ -25,9 +25,9 @@ import static propmanlab.scenarios.mplayer.MPlayerSource.s_stop;
 import static propmanlab.scenarios.mplayer.MPlayerSource.s_buffer;
 import static propmanlab.scenarios.mplayer.MPlayerSource.s_decode;
 
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 
-public class Property1 extends PropositionalMachine
+public class Property1 extends ExplicitPropositionalMachine
 {
   public Property1()
   {

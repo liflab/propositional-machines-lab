@@ -19,9 +19,9 @@ package propmanlab.scenarios.cart;
 
 import ca.uqac.lif.cep.propman.MultiEventFunction;
 import ca.uqac.lif.cep.propman.MultiEventFunction.Identity;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 
-public class CartProxy extends PropositionalMachine
+public class CartProxy extends ExplicitPropositionalMachine
 {
   protected int m_shedInterval;
   

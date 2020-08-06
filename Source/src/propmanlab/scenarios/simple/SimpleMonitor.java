@@ -5,9 +5,9 @@ import static ca.uqac.lif.cep.propman.MultiMonitor.EPSILON;
 import static ca.uqac.lif.cep.propman.MultiMonitor.NU;
 
 import ca.uqac.lif.cep.propman.MultiEventFactory;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 
-public class SimpleMonitor extends PropositionalMachine
+public class SimpleMonitor extends ExplicitPropositionalMachine
 {
   public static final transient String NAME = "Simple Monitor";
   

@@ -18,7 +18,7 @@
 package propmanlab.scenarios.simple;
 
 import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.json.JsonFalse;
 import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.Region;
@@ -50,9 +50,9 @@ public class SimpleScenario extends RandomScenario<Boolean>
   }
 
   @Override
-  public PropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
+  public ExplicitPropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
-    PropositionalMachine p = null;
+    ExplicitPropositionalMachine p = null;
     if (!r.hasDimension(BEST_EFFORT) || r.get(BEST_EFFORT) instanceof JsonFalse)
     {
       p = new SimpleProxy();
@@ -70,7 +70,7 @@ public class SimpleScenario extends RandomScenario<Boolean>
   }
 
   @Override
-  public PropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
+  public ExplicitPropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
     SimpleMonitor m = new SimpleMonitor();
     e.setMonitor(m);

@@ -20,14 +20,14 @@ package propmanlab.scenarios.mplayer;
 import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
 import ca.uqac.lif.cep.propman.MultiEvent;
 import ca.uqac.lif.cep.propman.MultiEventFunction;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.Valuation;
 import ca.uqac.lif.cep.propman.ValuationIterator;
 import ca.uqac.lif.cep.propman.MultiEventFunction.Identity;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MPlayerProxy extends PropositionalMachine
+public class MPlayerProxy extends ExplicitPropositionalMachine
 {
   /**
    * A single visible instance of the "ALL" cart multi-event

@@ -18,7 +18,7 @@
 package propmanlab.scenarios.temperature;
 
 import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.StatelessPropositionalMachine;
 import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
 import ca.uqac.lif.labpal.Region;
@@ -46,7 +46,7 @@ public class TemperatureThresholdScenario extends RandomScenario<Float>
   }
 
   @Override
-  public PropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
+  public ExplicitPropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
     StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
     pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2, 20));
@@ -55,7 +55,7 @@ public class TemperatureThresholdScenario extends RandomScenario<Float>
   }
 
   @Override
-  public PropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
+  public ExplicitPropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
     TemperatureIsUnder tis = new TemperatureIsUnder(74, 70, 1);
     OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, 100, 5);

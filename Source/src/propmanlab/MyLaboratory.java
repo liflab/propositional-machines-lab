@@ -45,6 +45,7 @@ import static propmanlab.AccessControlledStreamExperiment.BEST_EFFORT;
 import static propmanlab.AccessControlledStreamExperiment.PROXY;
 import static propmanlab.AccessControlledStreamExperiment.WITH_PROXY;
 import static propmanlab.StreamExperiment.LENGTH;
+import static propmanlab.StreamExperiment.MAX_MEMORY;
 import static propmanlab.StreamExperiment.MEMORY;
 import static propmanlab.StreamExperiment.THROUGHPUT;
 import static propmanlab.StreamExperiment.TIME;
@@ -183,8 +184,20 @@ public class MyLaboratory extends Laboratory
       Region new_big_r = new Region();
       new_big_r.add(SCENARIO, SimpleScenario.NAME);
       new_big_r.add(WITH_PROXY, JsonTrue.instance);
-      ExperimentTable et_best = new ExperimentTable(SCENARIO, NB_UNITRACES_TRUE, NB_UNITRACES_FALSE, NB_UNITRACES_INCONCLUSIVE);
-      ExperimentTable et_prox = new ExperimentTable(SCENARIO, NB_UNITRACES_TRUE, NB_UNITRACES_FALSE, NB_UNITRACES_INCONCLUSIVE);
+      VerdictPurityTable vpt = new VerdictPurityTable();
+      add(vpt);
+      ExperimentTable et_t = new ExperimentTable(SCENARIO, PROXY, THROUGHPUT);
+      ExperimentTable et_m = new ExperimentTable(SCENARIO, PROXY, MAX_MEMORY);
+      et_t.setShowInList(false);
+      et_m.setShowInList(false);
+      TransformedTable tt_t = new TransformedTable(new ExpandAsColumns(PROXY, THROUGHPUT), et_t);
+      tt_t.setTitle("Throughput for proxy vs. best effort");
+      tt_t.setNickname("tTpBestVsProxy");
+      add(tt_t);
+      TransformedTable tt_m = new TransformedTable(new ExpandAsColumns(PROXY, MAX_MEMORY), et_m);
+      tt_m.setTitle("Memory for proxy vs. best effort");
+      tt_m.setNickname("tMemBestVsProxy");
+      add(tt_m);
       for (Region r : new_big_r.all(SCENARIO))
       {
         Region r_best = new Region(r);
@@ -197,10 +210,12 @@ public class MyLaboratory extends Laboratory
         {
           continue;
         }
-        et_best.add(e_best);
-        et_prox.add(e_prox);
+        vpt.add(e_best, e_prox);
+        et_t.add(e_prox);
+        et_t.add(e_best);
+        et_m.add(e_prox);
+        et_m.add(e_best);
       }
-      add(et_best, et_prox);
     }
 
     // Macros

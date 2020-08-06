@@ -17,7 +17,7 @@
  */
 package propmanlab.scenarios.cart;
 
-import ca.uqac.lif.cep.propman.PropositionalMachine;
+import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.Valuation;
 import ca.uqac.lif.cep.propman.ValuationIterator;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ import static ca.uqac.lif.cep.propman.MultiMonitor.EPSILON;
 
 import ca.uqac.lif.cep.ltl.Troolean;
 
-public class CartLifecycleMonitor extends PropositionalMachine
+public class CartLifecycleMonitor extends ExplicitPropositionalMachine
 {
   protected int m_stateCount;
 
