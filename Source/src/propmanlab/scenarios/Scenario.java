@@ -55,7 +55,9 @@ public abstract class Scenario
     e.setInput(SCENARIO, m_name);
     getSource(e, r);
     getProxy(e, r);
-    getMonitor(e, r);
+    PropositionalMachine pm = getMonitor(e, r);
+    e.write(AccessControlledStreamExperiment.NUM_STATES, pm.getStateCount());
+    e.write(AccessControlledStreamExperiment.NUM_TRANSITIONS, pm.getTransitionCount());
     getImageUrl(e, r);
   }
   

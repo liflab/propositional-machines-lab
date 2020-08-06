@@ -33,10 +33,13 @@ import ca.uqac.lif.mtnp.table.TransformedTable;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.RandomBoolean;
 import ca.uqac.lif.synthia.random.RandomFloat;
+import ca.uqac.lif.synthia.random.RandomInteger;
 import propmanlab.macros.LabStats;
 import propmanlab.macros.MaxTraceLength;
 import propmanlab.macros.UniTraceCount;
 import propmanlab.scenarios.cart.CartScenario;
+import propmanlab.scenarios.cpuload.CpuLoadThresholdScenario;
+import propmanlab.scenarios.cpuload.RandomWalkInteger;
 import propmanlab.scenarios.mplayer.MPlayerScenario;
 import propmanlab.scenarios.simple.SimpleScenario;
 import propmanlab.scenarios.temperature.TemperatureThresholdScenario;
@@ -77,6 +80,11 @@ public class MyLaboratory extends Laboratory
    * A title namer
    */
   public static transient TitleNamer s_titleNamer = new TitleNamer();
+  
+  /**
+   * Whether to use a small-scale benchmark (used for debugging)
+   */
+  protected static transient boolean s_small = false;
 
   /**
    * An experiment factory
@@ -86,15 +94,27 @@ public class MyLaboratory extends Laboratory
   @Override
   public void setup()
   {
+    // Basic metadata
     setTitle("Benchmark for propositional machines in BeepBeep");
     setDoi("TODO");
     setAuthor("Rania Taleb, Sylvain Hallé");
+    
+    // Is it the small-scale benchmark?
+    if (s_small)
+    {
+      MAX_TRACE_LENGTH = 1000;
+      s_eventStep = MAX_TRACE_LENGTH / 10;
+    }
     
     // Setup of RNGs for the random experiments
     RandomFloat random_float = new RandomFloat();
     random_float.setSeed(getRandomSeed());
     RandomBoolean random_boolean = new RandomBoolean();
     random_boolean.setSeed(getRandomSeed());
+    RandomInteger random_integer_100 = new RandomInteger(0, 100);
+    random_integer_100.setSeed(getRandomSeed());
+    RandomInteger random_integer_2 = new RandomInteger(-1, 1);
+    random_integer_2.setSeed(getRandomSeed());
     
     // Factory setup: adding scenarios
     {
@@ -102,10 +122,12 @@ public class MyLaboratory extends Laboratory
       m_factory.addScenario(TemperatureThresholdScenario.NAME, new TemperatureThresholdScenario(random_float));
       m_factory.addScenario(CartScenario.NAME, new CartScenario(random_float));
       m_factory.addScenario(MPlayerScenario.NAME, new MPlayerScenario(random_float));
+      m_factory.addScenario(CpuLoadThresholdScenario.NAME, new CpuLoadThresholdScenario(new RandomWalkInteger(0, 100, random_integer_100, random_integer_2)));
     }
 
     Region big_r = new Region();
-    big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, CartScenario.NAME, MPlayerScenario.NAME);
+    big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, 
+        CartScenario.NAME, MPlayerScenario.NAME, CpuLoadThresholdScenario.NAME);
     big_r.add(WITH_PROXY, JsonTrue.instance, JsonFalse.instance);
     big_r.add(BEST_EFFORT, JsonFalse.instance);
 
