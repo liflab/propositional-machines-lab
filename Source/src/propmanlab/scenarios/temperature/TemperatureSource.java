@@ -17,10 +17,15 @@
  */
 package propmanlab.scenarios.temperature;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import ca.uqac.lif.cep.ltl.Troolean;
 import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
 import ca.uqac.lif.cep.propman.MultiEvent;
 import ca.uqac.lif.cep.propman.Valuation;
+import ca.uqac.lif.cep.propman.ValuationIterator;
 import propmanlab.source.MultiEventFileSource;
 
 public class TemperatureSource extends MultiEventFileSource
@@ -33,17 +38,17 @@ public class TemperatureSource extends MultiEventFileSource
   /**
    * The minimum temperature found in the input file
    */
-  protected static final float s_minTemp = 70;
+  public static final float s_minTemp = 70;
   
   /**
    * The maximum temperature found in the input file
    */
-  protected static final float s_maxTemp = 95;
+  public static final float s_maxTemp = 95;
   
   /**
    * The interval of temperatures
    */
-  protected static final float s_interval = 1;
+  public static final float s_interval = 1;
     
   public TemperatureSource()
   {
@@ -114,6 +119,22 @@ public class TemperatureSource extends MultiEventFileSource
     return new ConcreteMultiEvent(v);
   }
   
+  /**
+   * Gets the names of all the variables used to encode temperatures.
+   * @return An array containing the names of all the variables
+   */
+  public String[] getVariables()
+  {
+    return getVariables(s_minTemp, s_maxTemp, s_interval);
+  }
+  
+  /**
+   * Gets the names of all the variables used to encode temperatures.
+   * @param min_temp The minimum temperature
+   * @param max_temp The maximum temperature
+   * @param interval The interval covered by each variable
+   * @return An array containing the names of all the variables
+   */
   public static String[] getVariables(float min_temp, float max_temp, float interval)
   {
     int num_intervals = (int) Math.ceil((max_temp - min_temp) / interval);
@@ -126,7 +147,7 @@ public class TemperatureSource extends MultiEventFileSource
   }
   
   /**
-   * Gets the interval number corresponding to a numerical value
+   * Gets the interval number corresponding to a numerical value.
    * @param value The value
    * @return The interval number
    */
@@ -135,9 +156,96 @@ public class TemperatureSource extends MultiEventFileSource
     return getInterval(value, (double) s_minTemp, (double) s_interval);
   }
   
+  /**
+   * Gets the interval number corresponding to a numerical value.
+   * @param value The value
+   * @param min_temp The minimum temperature
+   * @param interval_width The width of an interval
+   * @return The interval number
+   */
   public static int getInterval(double value, double min_temp, double interval_width)
   {
     return (int) ((value - min_temp) / interval_width);
+  }
+  
+  /**
+   * Produces the concrete multi-event containing all valuations where zero,
+   * or more than one variable is true.
+   * @return The multi-event  
+   */
+  public ConcreteMultiEvent getNotOneTrue()
+  {
+    return getNotOneTrue(s_minTemp, s_maxTemp, s_interval);
+  }
+  
+  /**
+   * Produces the concrete multi-event containing all valuations where zero,
+   * or more than one variable is true.
+   * @param min_temp The minimum temperature
+   * @param max_temp The maximum temperature
+   * @param interval_width The width of an interval
+   * @return The multi-event  
+   */
+  public static ConcreteMultiEvent getNotOneTrue(float min_temp, float max_temp, float interval_width)
+  {
+    Set<Valuation> vals = new HashSet<Valuation>();
+    ValuationIterator vi = new ValuationIterator(getVariables(min_temp, max_temp, interval_width));
+    while (vi.hasNext())
+    {
+      Valuation v = vi.next();
+      int true_cnt = 0;
+      for (Map.Entry<String,Troolean.Value> e : v.entrySet())
+      {
+        if (e.getValue() == Troolean.Value.TRUE)
+        {
+          true_cnt++;
+          if (true_cnt > 1)
+          {
+            break;
+          }
+        }
+      }
+      if (true_cnt == 0 || true_cnt > 1)
+      {
+        vals.add(v);
+      }
+    }
+    return new ConcreteMultiEvent(vals);
+  }
+  
+  /**
+   * Produces the concrete multi-event containing all valuations where zero,
+   * the temperature variable is over the threshold.
+   * @param min_temp The minimum temperature
+   * @param max_temp The maximum temperature
+   * @param interval_width The width of an interval
+   * @return The multi-event  
+   */
+  public static ConcreteMultiEvent getOverThreshold(float min_temp, float max_temp, float interval_width)
+  {
+    Set<Valuation> vals = new HashSet<Valuation>();
+    ValuationIterator vi = new ValuationIterator(getVariables(min_temp, max_temp, interval_width));
+    while (vi.hasNext())
+    {
+      Valuation v = vi.next();
+      int true_cnt = 0;
+      for (Map.Entry<String,Troolean.Value> e : v.entrySet())
+      {
+        if (e.getValue() == Troolean.Value.TRUE)
+        {
+          true_cnt++;
+          if (true_cnt > 1)
+          {
+            break;
+          }
+        }
+      }
+      if (true_cnt == 0 || true_cnt > 1)
+      {
+        vals.add(v);
+      }
+    }
+    return new ConcreteMultiEvent(vals);
   }
 
 }

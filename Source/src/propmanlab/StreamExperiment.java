@@ -182,7 +182,12 @@ public class StreamExperiment<T> extends Experiment
     }
     else
     {
-      VerdictCount vc = (VerdictCount) hole.getLast()[0];
+      Object[] last = hole.getLast();
+      if (last == null)
+      {
+        throw new ExperimentException("The monitor did not output anything");
+      }
+      VerdictCount vc = (VerdictCount) last[0];
       if (vc == null)
       {
         throw new ExperimentException("Multi-monitor verdict is null");

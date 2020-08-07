@@ -33,17 +33,19 @@ import ca.uqac.lif.cep.propman.MultiEvent;
  * @author Rania Taleb, Sylvain Hallé
  */
 public class OverThresholdWithinInterval extends ExplicitPropositionalMachine
-{
+{ 
   /**
-   * Creates a new instance of the property
+   * Creates a new instance of the property.
    * @param threshold_condition The condition specifying the temperature
    * threshold
+   * @param threshold_condition The condition specifying that zero or more
+   * than one temperature variables are true
    * @param until The number of units of time during which the condition
    * must be respected (i.e. x)
    * @param interval The number of readings before which the temperature
    * must return above the threshold (i.e. y) 
    */
-  public OverThresholdWithinInterval(MultiEvent threshold_condition, int until, int interval)
+  public OverThresholdWithinInterval(MultiEvent threshold_condition, MultiEvent not_one_true, int until, int interval)
   {
     super();
     int state_cnt = 0;
@@ -58,6 +60,7 @@ public class OverThresholdWithinInterval extends ExplicitPropositionalMachine
     addTransition(state_cnt - 1, new TransitionOtherwise(state_cnt, NU));
     addTransition(state_cnt, new TransitionOtherwise(state_cnt, NU));
     int sink = ++state_cnt;
+    
     addTransition(sink, new TransitionOtherwise(sink, EMPTY));
     for (int i = 0; i <= until - interval; i++)
     {
@@ -80,7 +83,12 @@ public class OverThresholdWithinInterval extends ExplicitPropositionalMachine
         }
         previous = state_cnt;
       }
-      
     }
+    int error_sink = state_cnt + 1;
+    for (int i = 0; i < state_cnt; i++)
+    {
+      addTransition(i, new Transition(error_sink, not_one_true, EMPTY));
+    }
+    addTransition(error_sink, new TransitionOtherwise(error_sink, EPSILON));
   }
 }

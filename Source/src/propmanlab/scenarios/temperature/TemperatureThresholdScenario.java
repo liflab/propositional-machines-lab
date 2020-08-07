@@ -17,10 +17,15 @@
  */
 package propmanlab.scenarios.temperature;
 
+import static propmanlab.AccessControlledStreamExperiment.BEST_EFFORT;
+import static propmanlab.AccessControlledStreamExperiment.PROXY;
+
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.StatelessPropositionalMachine;
 import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
+import ca.uqac.lif.json.JsonFalse;
+import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.AffineTransform.AffineTransformFloat;
@@ -30,12 +35,12 @@ import propmanlab.scenarios.RandomScenario;
 public class TemperatureThresholdScenario extends RandomScenario<Float>
 {
   public static final transient String NAME = "Tempreature Threshold";
-  
+
   public TemperatureThresholdScenario(Picker<Float> picker)
   {
     super(NAME, "Random", "Blur temperature (stateless)", "Temperature threshold within 100", picker);
   }
-  
+
   @Override
   public Processor getSource(AccessControlledStreamExperiment e, Region r)
   {
@@ -48,17 +53,32 @@ public class TemperatureThresholdScenario extends RandomScenario<Float>
   @Override
   public ExplicitPropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
-    StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
-    pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2, 20));
-    e.setProxy(pm);
-    return pm;
+    ExplicitPropositionalMachine p = null;
+    if (!r.hasDimension(BEST_EFFORT) || r.get(BEST_EFFORT) instanceof JsonFalse)
+    {
+      StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
+      pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2, 20));
+      e.setInput(PROXY, "Propositional machine");
+      e.setInput(BEST_EFFORT, JsonFalse.instance);
+      p = pm;
+    }
+    else
+    {
+      StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
+      pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperatureApproximated(2, 20));
+      e.setInput(PROXY, "Best effort");
+      e.setInput(BEST_EFFORT, JsonTrue.instance);
+      p = pm;
+    }
+    e.setProxy(p);
+    return p;
   }
 
   @Override
   public ExplicitPropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
     TemperatureIsUnder tis = new TemperatureIsUnder(74, 70, 1);
-    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, 100, 5);
+    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, TemperatureSource.getNotOneTrue(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval), 100, 5);
     e.setMonitor(otwi);
     return otwi;
   }

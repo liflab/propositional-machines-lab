@@ -19,6 +19,9 @@ package propmanlab;
 
 import ca.uqac.lif.json.JsonFalse;
 import ca.uqac.lif.json.JsonTrue;
+import ca.uqac.lif.labpal.CliParser;
+import ca.uqac.lif.labpal.CliParser.Argument;
+import ca.uqac.lif.labpal.CliParser.ArgumentMap;
 import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.LatexNamer;
 import ca.uqac.lif.labpal.Region;
@@ -98,6 +101,14 @@ public class MyLaboratory extends Laboratory
     setTitle("Benchmark for propositional machines in BeepBeep");
     setDoi("TODO");
     setAuthor("Rania Taleb, Sylvain Hallé");
+    
+    // Handle command-line parameters
+    ArgumentMap args = getCliArguments();
+    if (args.hasOption("small"))
+    {
+      s_small = true;
+      System.out.println("Using small traces");
+    }
     
     // Is it the small-scale benchmark?
     if (s_small)
@@ -204,7 +215,7 @@ public class MyLaboratory extends Laboratory
     // Comparison to best existing model
     {
       Region new_big_r = new Region();
-      new_big_r.add(SCENARIO, SimpleScenario.NAME);
+      new_big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME);
       new_big_r.add(WITH_PROXY, JsonTrue.instance);
       VerdictPurityTable vpt = new VerdictPurityTable();
       add(vpt);
@@ -253,5 +264,11 @@ public class MyLaboratory extends Laboratory
   {
     // Nothing else to do here
     MyLaboratory.initialize(args, MyLaboratory.class);
+  }
+  
+  @Override
+  public void setupCli(CliParser parser)
+  {
+    parser.addArgument(new Argument().withLongName("small").withDescription("Use short traces for debugging"));
   }
 }

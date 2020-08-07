@@ -25,6 +25,7 @@ import java.io.PrintStream;
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Pullable;
 import ca.uqac.lif.cep.propman.AccessControlledMonitor;
+import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
 import ca.uqac.lif.cep.propman.DotMachineRenderer;
 import ca.uqac.lif.cep.propman.StatelessPropositionalMachine;
 import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
@@ -35,12 +36,16 @@ public class Demo
   public static void main(String[] args) throws FileNotFoundException
   {
     TemperatureIsUnder tis = new TemperatureIsUnder(74, 70, 1);
-    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, 100, 5);
+    System.out.println("Getting one");
+    ConcreteMultiEvent not = TemperatureSource.getNotOneTrue(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval);
+    System.out.println("Gotten");
+    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, not, 5, 2);
     System.out.println(otwi.getStateCount());
     System.out.println(otwi.getTransitionCount());
     DotMachineRenderer renderer = new DotMachineRenderer();
     PrintStream ps = new PrintStream(new FileOutputStream(new File("/tmp/mach.dot")));
     renderer.setNickname(tis, "f");
+    renderer.setNickname(not, "n");
     renderer.render(ps, otwi);
     ps.close();
     

@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class Demo
 {
 
