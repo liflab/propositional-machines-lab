@@ -17,8 +17,16 @@
  */
 package propmanlab.scenarios.mplayer;
 
+import static propmanlab.AccessControlledStreamExperiment.BEST_EFFORT;
+import static propmanlab.AccessControlledStreamExperiment.PROXY;
+
 import ca.uqac.lif.cep.Processor;
+import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
 import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
+import ca.uqac.lif.cep.propman.StatelessPropositionalMachine;
+import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
+import ca.uqac.lif.json.JsonFalse;
+import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.Region;
 import ca.uqac.lif.synthia.Picker;
 import propmanlab.AccessControlledStreamExperiment;
@@ -45,15 +53,36 @@ public class MPlayerScenario extends RandomScenario<Float>
   @Override
   public ExplicitPropositionalMachine getProxyInstance(AccessControlledStreamExperiment e, Region r)
   {
-    MPlayerProxy proxy = new MPlayerProxy(20, 15);
-    e.setProxy(proxy);
-    return proxy;
+    ExplicitPropositionalMachine p = null;
+    if (!r.hasDimension(BEST_EFFORT))
+    {
+      MPlayerProxy proxy = new MPlayerProxy(20, 15);
+      p = proxy;
+    }
+    else if (r.get(BEST_EFFORT) instanceof JsonFalse)
+    {
+      StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
+      pm.addCondition(null, BlurStopPause.instance);
+      e.setInput(PROXY, "Propositional machine");
+      e.setInput(BEST_EFFORT, JsonFalse.instance);
+      p = pm;
+    }
+    else
+    {
+      StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
+      pm.addCondition(null, BlurStopPauseOver.instance);
+      e.setInput(PROXY, "Best effort");
+      e.setInput(BEST_EFFORT, JsonTrue.instance);
+      p = pm;
+    }
+    e.setProxy(p);
+    return p;
   }
 
   @Override
   public ExplicitPropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
-    Property1 mon = new Property1();
+    LifecycleProperty mon = new LifecycleProperty();
     e.setMonitor(mon);
     return mon;
   }

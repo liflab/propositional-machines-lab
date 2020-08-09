@@ -27,9 +27,9 @@ import static propmanlab.scenarios.mplayer.MPlayerSource.s_decode;
 
 import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 
-public class Property1 extends ExplicitPropositionalMachine
+public class LifecycleProperty extends ExplicitPropositionalMachine
 {
-  public Property1()
+  public LifecycleProperty()
   {
     super();
     addTransition(0, new Transition(1, s_play, EPSILON));
@@ -39,12 +39,11 @@ public class Property1 extends ExplicitPropositionalMachine
     addTransition(2, new Transition(2, s_pause, EPSILON));
     addTransition(2, new Transition(1, s_play, EPSILON));
     addTransition(2, new Transition(0, s_stop, EPSILON));
-    addTransition(0, new Transition(1, s_play, EPSILON));
     addTransition(3, new Transition(4, s_decode, EPSILON));
     addTransition(3, new Transition(2, s_pause, EPSILON));
-    addTransition(3, new Transition(1, s_stop, EPSILON));
+    addTransition(3, new Transition(0, s_stop, EPSILON));
     addTransition(4, new Transition(3, s_buffer, EPSILON));
-    addTransition(4, new Transition(1, s_stop, EPSILON));
+    addTransition(4, new Transition(0, s_stop, EPSILON));
     addTransition(4, new Transition(2, s_pause, EPSILON));
     addTransition(0, new TransitionOtherwise(5, EMPTY));
     addTransition(1, new TransitionOtherwise(5, EMPTY));
@@ -55,8 +54,8 @@ public class Property1 extends ExplicitPropositionalMachine
   }
   
   @Override
-  public Property1 duplicate(boolean with_state)
+  public LifecycleProperty duplicate(boolean with_state)
   {
-    return new Property1();
+    return new LifecycleProperty();
   }
 }

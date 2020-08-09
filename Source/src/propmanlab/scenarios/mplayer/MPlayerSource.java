@@ -134,10 +134,19 @@ public class MPlayerSource extends MultiEventSource
     else if (e instanceof PlayEvent)
     {
       m_state = PlayState.PLAYING;
+      m_buffered = false;
     }
     else if (e instanceof PauseEvent)
     {
       m_state = PlayState.PAUSED;
+    }
+    else if (e instanceof BufferEvent)
+    {
+      m_buffered = true;
+    }
+    else if (e instanceof DecodeEvent)
+    {
+      m_buffered = false;
     }
   }
 
@@ -153,16 +162,21 @@ public class MPlayerSource extends MultiEventSource
     throw new UnsupportedOperationException("This processor cannot be cloned");
   }
   
+  @Override
+  public void reset()
+  {
+    super.reset();
+    m_floatSource.reset();
+  }
+  
   /**
    * Event representing the "play" action
    */
   public static class PlayEvent extends ConcreteMultiEvent
   {
-    protected static final Set<Valuation> s_valuations = createValuations();
-    
     private PlayEvent()
     {
-      super();
+      super(createValuations());
     }
     
     protected static Set<Valuation> createValuations()
@@ -182,13 +196,7 @@ public class MPlayerSource extends MultiEventSource
     public String toString()
     {
       return "play";
-    }
-    
-    @Override
-    public Set<Valuation> getValuations()
-    {
-      return s_valuations;
-    }
+    }    
   }
   
   /**
@@ -196,11 +204,9 @@ public class MPlayerSource extends MultiEventSource
    */
   public static class StopEvent extends ConcreteMultiEvent
   {
-    protected static final Set<Valuation> s_valuations = createValuations();
-    
     private StopEvent()
     {
-      super();
+      super(createValuations());
     }
     
     protected static Set<Valuation> createValuations()
@@ -221,12 +227,6 @@ public class MPlayerSource extends MultiEventSource
     {
       return "stop";
     }
-    
-    @Override
-    public Set<Valuation> getValuations()
-    {
-      return s_valuations;
-    }
   }
   
   /**
@@ -234,11 +234,9 @@ public class MPlayerSource extends MultiEventSource
    */
   public static class PauseEvent extends ConcreteMultiEvent
   {
-    protected static final Set<Valuation> s_valuations = createValuations();
-    
     private PauseEvent()
     {
-      super();
+      super(createValuations());
     }
     
     protected static Set<Valuation> createValuations()
@@ -259,12 +257,6 @@ public class MPlayerSource extends MultiEventSource
     {
       return "pause";
     }
-    
-    @Override
-    public Set<Valuation> getValuations()
-    {
-      return s_valuations;
-    }
   }
   
   /**
@@ -272,11 +264,9 @@ public class MPlayerSource extends MultiEventSource
    */
   public static class BufferEvent extends ConcreteMultiEvent
   {
-    protected static final Set<Valuation> s_valuations = createValuations();
-    
     private BufferEvent()
     {
-      super();
+      super(createValuations());
     }
     
     protected static Set<Valuation> createValuations()
@@ -297,12 +287,6 @@ public class MPlayerSource extends MultiEventSource
     {
       return "buffer";
     }
-    
-    @Override
-    public Set<Valuation> getValuations()
-    {
-      return s_valuations;
-    }
   }
   
   /**
@@ -310,11 +294,9 @@ public class MPlayerSource extends MultiEventSource
    */
   public static class DecodeEvent extends ConcreteMultiEvent
   {
-    protected static final Set<Valuation> s_valuations = createValuations();
-    
     private DecodeEvent()
     {
-      super();
+      super(createValuations());
     }
     
     protected static Set<Valuation> createValuations()
@@ -334,12 +316,6 @@ public class MPlayerSource extends MultiEventSource
     public String toString()
     {
       return "decode";
-    }
-    
-    @Override
-    public Set<Valuation> getValuations()
-    {
-      return s_valuations;
     }
   }
 }
