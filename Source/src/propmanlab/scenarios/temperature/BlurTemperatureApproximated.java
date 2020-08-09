@@ -56,22 +56,16 @@ public class BlurTemperatureApproximated extends MultiEventFunction
   protected int m_blurAmount;
   
   /**
-   * The total number of intervals used to represent the temperature
-   */
-  protected int m_numIntervals;
-  
-  /**
    * Creates a new instance of the function
    * @param blur_amount The number of contiguous variables, on both sides of 
    * the actual <tt>true</tt> variable, to also set to <tt>true</tt>
    * @param num_intervals The total number of intervals used to represent
    * the temperature
    */
-  public BlurTemperatureApproximated(int blur_amount, int num_intervals)
+  public BlurTemperatureApproximated(int blur_amount)
   {
     super();
     m_blurAmount = blur_amount;
-    m_numIntervals = num_intervals;
   }
   
   @Override
@@ -100,10 +94,11 @@ public class BlurTemperatureApproximated extends MultiEventFunction
         break;
       }
     }
-    int num_vars_to_blur = Math.min(m_numIntervals, true_variable + m_blurAmount + 1) - Math.max(0, true_variable - m_blurAmount);
+    int num_intervals = v.keySet().size();
+    int num_vars_to_blur = Math.min(num_intervals, true_variable + m_blurAmount + 1) - Math.max(0, true_variable - m_blurAmount);
     String[] variables_to_blur = new String[num_vars_to_blur];
     int k = 0;
-    for (int i = Math.max(0, true_variable - m_blurAmount); i < Math.min(m_numIntervals, true_variable + m_blurAmount + 1); i++)
+    for (int i = Math.max(0, true_variable - m_blurAmount); i < Math.min(num_intervals, true_variable + m_blurAmount + 1); i++)
     {
       variables_to_blur[k++] = "t" + i;
     }
@@ -116,7 +111,7 @@ public class BlurTemperatureApproximated extends MultiEventFunction
       {
         val.put("t" + i, Troolean.Value.FALSE);
       }
-      for (int i = true_variable + m_blurAmount + 1; i < m_numIntervals; i++)
+      for (int i = true_variable + m_blurAmount + 1; i < num_intervals; i++)
       {
         val.put("t" + i, Troolean.Value.FALSE);
       }

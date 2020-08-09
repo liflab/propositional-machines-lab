@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import propmanlab.BigMath;
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Pullable;
 import ca.uqac.lif.cep.propman.AccessControlledMonitor;
@@ -35,23 +37,19 @@ public class Demo
 {
   public static void main(String[] args) throws FileNotFoundException
   {
-    TemperatureIsUnder tis = new TemperatureIsUnder(74, 70, 1);
-    System.out.println("Getting one");
-    ConcreteMultiEvent not = TemperatureSource.getNotOneTrue(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval);
-    System.out.println("Gotten");
-    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, not, 5, 2);
-    System.out.println(otwi.getStateCount());
-    System.out.println(otwi.getTransitionCount());
+    ConcreteMultiEvent tis = TemperatureSource.getTemperatureIsUnder(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval, 74);
+    ConcreteMultiEvent tio = TemperatureSource.getTemperatureIsOver(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval, 74);
+    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, tio, 2, 2);
     DotMachineRenderer renderer = new DotMachineRenderer();
     PrintStream ps = new PrintStream(new FileOutputStream(new File("/tmp/mach.dot")));
-    renderer.setNickname(tis, "f");
-    renderer.setNickname(not, "n");
+    renderer.setNickname(tis, "below");
+    renderer.setNickname(tio, "above");
     renderer.render(ps, otwi);
     ps.close();
     
-    SimulatedTemperatureSource source = new SimulatedTemperatureSource(70, 90, 1, 74, 74, 74, 78, 78, 78);
+    SimulatedTemperatureSource source = new SimulatedTemperatureSource(70, 95, 1, 72, 72, 74, 78, 78, 78);
     StatelessPropositionalMachine proxy = new StatelessPropositionalMachine();
-    proxy.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2, 20));
+    proxy.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(0));
     AccessControlledMonitor acm = new AccessControlledMonitor(proxy, otwi);
     Connector.connect(source, acm);
     Pullable p = acm.getPullableOutput();
@@ -59,5 +57,16 @@ public class Demo
     {
       System.out.println(p.next());
     }
+    
+    // A simple calculation
+    int v_x = 51996, v_y = 51993, v_z = 48665;
+    BigDecimal x = BigMath.powBig(10, v_x);
+    BigDecimal y = BigMath.powBig(10, v_y);
+    BigDecimal z = BigMath.powBig(10, v_z);
+    BigDecimal sum = x.add(y).add(z);
+    BigDecimal f = x.divide(sum, 1000, RoundingMode.HALF_EVEN);
+    System.out.println(f);
+    double log_f = BigMath.logBigDecimal(f) / BigMath.LOG_10;
+    System.out.println(log_f);
   }
 }

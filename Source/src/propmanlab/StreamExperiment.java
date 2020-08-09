@@ -144,6 +144,7 @@ public class StreamExperiment<T> extends Experiment
     Connector.connect(proc, hole);
     long start = System.currentTimeMillis();
     int event_count = 0;
+    m_source.reset();
     int source_length = m_source.getEventBound();
     long max_mem = 0;
     while (s_p.hasNext())

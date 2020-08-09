@@ -87,6 +87,14 @@ public class RandomConcreteMultiEventSource extends RandomMultiEventSource
   {
     return "random-" + m_variables.length + "-" + m_random.getSeed() + ".txt";
   }
+  
+  @Override
+  public void reset()
+  {
+    super.reset();
+    m_booleanSource.reset();
+    m_eventSize.reset();
+  }
 
   @Override
   public Processor duplicate(boolean with_state)

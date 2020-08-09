@@ -29,6 +29,7 @@ public class RandomCpuSource extends SimulatedCpuSource
   
   public static int[] getReadings(int num_readings, Picker<Integer> picker)
   {
+    picker.reset();
     int[] readings = new int[num_readings];
     for (int i = 0; i < num_readings; i++)
     {

@@ -57,7 +57,7 @@ public class TemperatureThresholdScenario extends RandomScenario<Float>
     if (!r.hasDimension(BEST_EFFORT) || r.get(BEST_EFFORT) instanceof JsonFalse)
     {
       StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
-      pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2, 20));
+      pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperature(2));
       e.setInput(PROXY, "Propositional machine");
       e.setInput(BEST_EFFORT, JsonFalse.instance);
       p = pm;
@@ -65,7 +65,7 @@ public class TemperatureThresholdScenario extends RandomScenario<Float>
     else
     {
       StatelessPropositionalMachine pm = new StatelessPropositionalMachine();
-      pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperatureApproximated(2, 20));
+      pm.addCondition(SymbolicMultiEvent.ALL, new BlurTemperatureApproximated(2));
       e.setInput(PROXY, "Best effort");
       e.setInput(BEST_EFFORT, JsonTrue.instance);
       p = pm;
@@ -77,8 +77,9 @@ public class TemperatureThresholdScenario extends RandomScenario<Float>
   @Override
   public ExplicitPropositionalMachine getMonitor(AccessControlledStreamExperiment e, Region r)
   {
-    TemperatureIsUnder tis = new TemperatureIsUnder(74, 70, 1);
-    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, TemperatureSource.getNotOneTrue(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval), 100, 5);
+    int threshold = 90;
+    TemperatureIsUnder tis = new TemperatureIsUnder(threshold, 70, 1);
+    OverThresholdWithinInterval otwi = new OverThresholdWithinInterval(tis, TemperatureSource.getTemperatureIsOver(TemperatureSource.s_minTemp, TemperatureSource.s_maxTemp, TemperatureSource.s_interval, threshold), 100, 5);
     e.setMonitor(otwi);
     return otwi;
   }

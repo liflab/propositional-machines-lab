@@ -38,6 +38,7 @@ import ca.uqac.lif.synthia.random.RandomBoolean;
 import ca.uqac.lif.synthia.random.RandomFloat;
 import ca.uqac.lif.synthia.random.RandomInteger;
 import propmanlab.macros.LabStats;
+import propmanlab.macros.MacroVerdictPurity;
 import propmanlab.macros.MaxTraceLength;
 import propmanlab.macros.UniTraceCount;
 import propmanlab.scenarios.cart.CartScenario;
@@ -113,7 +114,7 @@ public class MyLaboratory extends Laboratory
     // Is it the small-scale benchmark?
     if (s_small)
     {
-      MAX_TRACE_LENGTH = 1000;
+      MAX_TRACE_LENGTH = 20;
       s_eventStep = MAX_TRACE_LENGTH / 10;
     }
     
@@ -215,7 +216,7 @@ public class MyLaboratory extends Laboratory
     // Comparison to best existing model
     {
       Region new_big_r = new Region();
-      new_big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME);
+      new_big_r.add(SCENARIO, SimpleScenario.NAME, TemperatureThresholdScenario.NAME, MPlayerScenario.NAME);
       new_big_r.add(WITH_PROXY, JsonTrue.instance);
       VerdictPurityTable vpt = new VerdictPurityTable();
       add(vpt);
@@ -249,6 +250,7 @@ public class MyLaboratory extends Laboratory
         et_m.add(e_prox);
         et_m.add(e_best);
       }
+      add(new MacroVerdictPurity(this, vpt));
     }
 
     // Macros

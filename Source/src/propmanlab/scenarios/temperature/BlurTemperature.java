@@ -54,22 +54,14 @@ public class BlurTemperature extends MultiEventFunction
   protected int m_blurAmount;
   
   /**
-   * The total number of intervals used to represent the temperature
-   */
-  protected int m_numIntervals;
-  
-  /**
    * Creates a new instance of the function
    * @param blur_amount The number of contiguous variables, on both sides of 
    * the actual <tt>true</tt> variable, to also set to <tt>true</tt>
-   * @param num_intervals The total number of intervals used to represent
-   * the temperature
    */
-  public BlurTemperature(int blur_amount, int num_intervals)
+  public BlurTemperature(int blur_amount)
   {
     super();
     m_blurAmount = blur_amount;
-    m_numIntervals = num_intervals;
   }
   
   @Override
@@ -99,10 +91,11 @@ public class BlurTemperature extends MultiEventFunction
         break;
       }
     }
-    for (int i = Math.max(0, true_variable - m_blurAmount); i < Math.min(m_numIntervals, true_variable + m_blurAmount + 1); i++)
+    int num_intervals = v.keySet().size();
+    for (int i = Math.max(0, true_variable - m_blurAmount); i < Math.min(num_intervals, true_variable + m_blurAmount + 1); i++)
     {
       Valuation v2 = new Valuation();
-      for (int j = 0; j < m_numIntervals; j++)
+      for (int j = 0; j < num_intervals; j++)
       {
         if (j != i)
         {

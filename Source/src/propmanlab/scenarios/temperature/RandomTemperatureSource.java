@@ -30,6 +30,7 @@ public class RandomTemperatureSource extends SimulatedTemperatureSource
   
   public static float[] getReadings(int num_readings, Picker<Float> picker)
   {
+    picker.reset();
     float[] readings = new float[num_readings];
     for (int i = 0; i < num_readings; i++)
     {

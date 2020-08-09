@@ -18,6 +18,7 @@
 package propmanlab.scenarios.mplayer;
 
 import ca.uqac.lif.cep.Processor;
+import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.ltl.Troolean.Value;
 import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
 import ca.uqac.lif.cep.propman.MultiEvent;
@@ -84,7 +85,7 @@ public class MPlayerSource extends MultiEventSource
   }
 
   @Override
-  protected MultiEvent getEvent()
+  protected MultiEvent getEvent() throws ProcessorException
   {
     Set<MultiEvent> options = new HashSet<MultiEvent>();
     if (m_state == PlayState.STOPPED)
@@ -118,9 +119,11 @@ public class MPlayerSource extends MultiEventSource
     MultiEvent chosen = picker.pick();
     if (chosen == null)
     {
-      System.out.println("ERROR");
+      // Not supposed to happen, just for safety
+      throw new ProcessorException("No event to choose from");
     }
     updateState(chosen);
+    System.out.println(chosen);
     return chosen;
   }
   
@@ -167,6 +170,7 @@ public class MPlayerSource extends MultiEventSource
   {
     super.reset();
     m_floatSource.reset();
+    System.out.println("------RESET");
   }
   
   /**

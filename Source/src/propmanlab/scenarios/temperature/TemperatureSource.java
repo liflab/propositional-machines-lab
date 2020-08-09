@@ -120,6 +120,66 @@ public class TemperatureSource extends MultiEventFileSource
   }
   
   /**
+   * Gets a multi-event corresponding to all valid temperature encodings
+   * below some given threshold
+   * @param temp The temperature threshold
+   * @return The multi-event encoding thie temperature readings
+   */
+  public static ConcreteMultiEvent getTemperatureIsUnder(double min_temp, double max_temp, double interval, double temp)
+  {
+    int true_variable = getInterval(temp, min_temp, interval);
+    int num_intervals = (int) Math.ceil((max_temp - min_temp) / interval);
+    Set<Valuation> valuations = new HashSet<Valuation>();
+    for (int i = 0; i < true_variable; i++)
+    {
+      Valuation v = new Valuation();
+      for (int j = 0; j < num_intervals; j++)
+      {
+        if (j == i)
+        {
+          v.put("t" + j, Troolean.Value.TRUE);
+        }
+        else
+        {
+          v.put("t" + j, Troolean.Value.FALSE);
+        }
+      }
+      valuations.add(v);
+    }
+    return new ConcreteMultiEvent(valuations);
+  }
+  
+  /**
+   * Gets a multi-event corresponding to all valid temperature encodings
+   * above some given threshold
+   * @param temp The temperature threshold
+   * @return The multi-event encoding thie temperature readings
+   */
+  public static ConcreteMultiEvent getTemperatureIsOver(double min_temp, double max_temp, double interval, double temp)
+  {
+    int true_variable = getInterval(temp, min_temp, interval);
+    int num_intervals = (int) Math.ceil((max_temp - min_temp) / interval);
+    Set<Valuation> valuations = new HashSet<Valuation>();
+    for (int i = true_variable; i < num_intervals; i++)
+    {
+      Valuation v = new Valuation();
+      for (int j = 0; j < num_intervals; j++)
+      {
+        if (j == i)
+        {
+          v.put("t" + j, Troolean.Value.TRUE);
+        }
+        else
+        {
+          v.put("t" + j, Troolean.Value.FALSE);
+        }
+      }
+      valuations.add(v);
+    }
+    return new ConcreteMultiEvent(valuations);
+  }
+  
+  /**
    * Gets the names of all the variables used to encode temperatures.
    * @return An array containing the names of all the variables
    */
