@@ -34,6 +34,12 @@ import ca.uqac.lif.cep.propman.DotMachineRenderer;
 import ca.uqac.lif.cep.propman.StatelessPropositionalMachine;
 import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
 
+import static propmanlab.scenarios.mplayer.MPlayerSource.BUFFER;
+import static propmanlab.scenarios.mplayer.MPlayerSource.DECODE;
+import static propmanlab.scenarios.mplayer.MPlayerSource.PAUSE;
+import static propmanlab.scenarios.mplayer.MPlayerSource.PLAY;
+import static propmanlab.scenarios.mplayer.MPlayerSource.STOP;
+
 @SuppressWarnings("unused")
 public class Demo
 {
@@ -42,11 +48,11 @@ public class Demo
     LifecycleProperty p1 = new LifecycleProperty();
     DotMachineRenderer renderer = new DotMachineRenderer();
     PrintStream ps = new PrintStream(new FileOutputStream(new File("/tmp/mach.dot")));
-    renderer.setNickname(MPlayerSource.s_buffer, "buffer");
-    renderer.setNickname(MPlayerSource.s_decode, "decode");
-    renderer.setNickname(MPlayerSource.s_play, "play");
-    renderer.setNickname(MPlayerSource.s_pause, "pause");
-    renderer.setNickname(MPlayerSource.s_stop, "stop");
+    renderer.setNickname(MPlayerSource.s_buffer, BUFFER);
+    renderer.setNickname(MPlayerSource.s_decode, DECODE);
+    renderer.setNickname(MPlayerSource.s_play, PLAY);
+    renderer.setNickname(MPlayerSource.s_pause, PAUSE);
+    renderer.setNickname(MPlayerSource.s_stop, STOP);
     renderer.render(ps, p1);
     ps.close();
     Pushable p = p1.getPushableInput();

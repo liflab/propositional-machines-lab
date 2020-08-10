@@ -32,32 +32,57 @@ import propmanlab.source.MultiEventSource;
 public class MPlayerSource extends MultiEventSource 
 {
   /**
+   * The string designating the PLAY variable.
+   */
+  public static final transient String PLAY = "play";
+  
+  /**
+   * The string designating the STOP variable.
+   */
+  public static final transient String STOP = "stop";
+  
+  /**
+   * The string designating the PAUSE variable.
+   */
+  public static final transient String PAUSE = "pause";
+  
+  /**
+   * The string designating the BUFFER variable.
+   */
+  public static final transient String BUFFER = "buffer";
+  
+  /**
+   * The string designating the DECODE variable.
+   */
+  public static final transient String DECODE = "decode";
+  
+  /**
    * The play state
    */
   public static enum PlayState {STOPPED, PAUSED, PLAYING}
   
   /**
-   * A singleton instance of the "play" event
+   * A singleton instance of the PLAY event
    */
   public static PlayEvent s_play = new PlayEvent();
   
   /**
-   * A singleton instance of the "stop" event
+   * A singleton instance of the STOP event
    */
   public static StopEvent s_stop = new StopEvent();
   
   /**
-   * A singleton instance of the "pause" event
+   * A singleton instance of the PAUSE event
    */
   public static PauseEvent s_pause = new PauseEvent();
   
   /**
-   * A singleton instance of the "buffer" event
+   * A singleton instance of the BUFFER event
    */
   public static BufferEvent s_buffer = new BufferEvent();
   
   /**
-   * A singleton instance of the "decode" event
+   * A singleton instance of the DECODE event
    */
   public static DecodeEvent s_decode = new DecodeEvent();
   
@@ -78,7 +103,7 @@ public class MPlayerSource extends MultiEventSource
   
   public MPlayerSource(int length, Picker<Float> float_source)
   {
-    super(length, "play", "stop", "pause", "buffer", "decode");
+    super(length, PLAY, STOP, PAUSE, BUFFER, DECODE);
     m_floatSource = float_source;
     m_buffered = false;
     m_state = PlayState.STOPPED;
@@ -174,7 +199,7 @@ public class MPlayerSource extends MultiEventSource
   }
   
   /**
-   * Event representing the "play" action
+   * Event representing the PLAY action
    */
   public static class PlayEvent extends ConcreteMultiEvent
   {
@@ -187,11 +212,11 @@ public class MPlayerSource extends MultiEventSource
     {
       Set<Valuation> set = new HashSet<Valuation>();
       Valuation v = new Valuation();
-      v.put("play", Value.TRUE);
-      v.put("stop", Value.FALSE);
-      v.put("pause", Value.FALSE);
-      v.put("buffer", Value.FALSE);
-      v.put("decode", Value.FALSE);
+      v.put(PLAY, Value.TRUE);
+      v.put(STOP, Value.FALSE);
+      v.put(PAUSE, Value.FALSE);
+      v.put(BUFFER, Value.FALSE);
+      v.put(DECODE, Value.FALSE);
       set.add(v);
       return set;
     }
@@ -199,12 +224,12 @@ public class MPlayerSource extends MultiEventSource
     @Override
     public String toString()
     {
-      return "play";
+      return PLAY;
     }    
   }
   
   /**
-   * Event representing the "stop" action
+   * Event representing the STOP action
    */
   public static class StopEvent extends ConcreteMultiEvent
   {
@@ -217,11 +242,11 @@ public class MPlayerSource extends MultiEventSource
     {
       Set<Valuation> set = new HashSet<Valuation>();
       Valuation v = new Valuation();
-      v.put("play", Value.FALSE);
-      v.put("stop", Value.TRUE);
-      v.put("pause", Value.FALSE);
-      v.put("buffer", Value.FALSE);
-      v.put("decode", Value.FALSE);
+      v.put(PLAY, Value.FALSE);
+      v.put(STOP, Value.TRUE);
+      v.put(PAUSE, Value.FALSE);
+      v.put(BUFFER, Value.FALSE);
+      v.put(DECODE, Value.FALSE);
       set.add(v);
       return set;
     }
@@ -229,12 +254,12 @@ public class MPlayerSource extends MultiEventSource
     @Override
     public String toString()
     {
-      return "stop";
+      return STOP;
     }
   }
   
   /**
-   * Event representing the "pause" action
+   * Event representing the PAUSE action
    */
   public static class PauseEvent extends ConcreteMultiEvent
   {
@@ -247,11 +272,11 @@ public class MPlayerSource extends MultiEventSource
     {
       Set<Valuation> set = new HashSet<Valuation>();
       Valuation v = new Valuation();
-      v.put("play", Value.FALSE);
-      v.put("stop", Value.FALSE);
-      v.put("pause", Value.TRUE);
-      v.put("buffer", Value.FALSE);
-      v.put("decode", Value.FALSE);
+      v.put(PLAY, Value.FALSE);
+      v.put(STOP, Value.FALSE);
+      v.put(PAUSE, Value.TRUE);
+      v.put(BUFFER, Value.FALSE);
+      v.put(DECODE, Value.FALSE);
       set.add(v);
       return set;
     }
@@ -259,12 +284,12 @@ public class MPlayerSource extends MultiEventSource
     @Override
     public String toString()
     {
-      return "pause";
+      return PAUSE;
     }
   }
   
   /**
-   * Event representing the "buffer" action
+   * Event representing the BUFFER action
    */
   public static class BufferEvent extends ConcreteMultiEvent
   {
@@ -277,11 +302,11 @@ public class MPlayerSource extends MultiEventSource
     {
       Set<Valuation> set = new HashSet<Valuation>();
       Valuation v = new Valuation();
-      v.put("play", Value.TRUE);
-      v.put("stop", Value.FALSE);
-      v.put("pause", Value.FALSE);
-      v.put("buffer", Value.TRUE);
-      v.put("decode", Value.FALSE);
+      v.put(PLAY, Value.TRUE);
+      v.put(STOP, Value.FALSE);
+      v.put(PAUSE, Value.FALSE);
+      v.put(BUFFER, Value.TRUE);
+      v.put(DECODE, Value.FALSE);
       set.add(v);
       return set;
     }
@@ -289,12 +314,12 @@ public class MPlayerSource extends MultiEventSource
     @Override
     public String toString()
     {
-      return "buffer";
+      return BUFFER;
     }
   }
   
   /**
-   * Event representing the "buffer" action
+   * Event representing the BUFFER action
    */
   public static class DecodeEvent extends ConcreteMultiEvent
   {
@@ -307,11 +332,11 @@ public class MPlayerSource extends MultiEventSource
     {
       Set<Valuation> set = new HashSet<Valuation>();
       Valuation v = new Valuation();
-      v.put("play", Value.TRUE);
-      v.put("stop", Value.FALSE);
-      v.put("pause", Value.FALSE);
-      v.put("buffer", Value.TRUE);
-      v.put("decode", Value.TRUE);
+      v.put(PLAY, Value.TRUE);
+      v.put(STOP, Value.FALSE);
+      v.put(PAUSE, Value.FALSE);
+      v.put(BUFFER, Value.TRUE);
+      v.put(DECODE, Value.TRUE);
       set.add(v);
       return set;
     }
@@ -319,7 +344,7 @@ public class MPlayerSource extends MultiEventSource
     @Override
     public String toString()
     {
-      return "decode";
+      return DECODE;
     }
   }
 }

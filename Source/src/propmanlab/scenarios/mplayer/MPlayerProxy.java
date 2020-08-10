@@ -18,7 +18,7 @@
 package propmanlab.scenarios.mplayer;
 
 import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
-import ca.uqac.lif.cep.propman.MultiEvent;
+import ca.uqac.lif.cep.propman.MultiEvent;  
 import ca.uqac.lif.cep.propman.MultiEventFunction;
 import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.Valuation;
@@ -26,6 +26,12 @@ import ca.uqac.lif.cep.propman.ValuationIterator;
 import ca.uqac.lif.cep.propman.MultiEventFunction.Identity;
 import java.util.HashSet;
 import java.util.Set;
+
+import static propmanlab.scenarios.mplayer.MPlayerSource.BUFFER;
+import static propmanlab.scenarios.mplayer.MPlayerSource.DECODE;
+import static propmanlab.scenarios.mplayer.MPlayerSource.PAUSE;
+import static propmanlab.scenarios.mplayer.MPlayerSource.PLAY;
+import static propmanlab.scenarios.mplayer.MPlayerSource.STOP;
 
 public class MPlayerProxy extends ExplicitPropositionalMachine
 {
@@ -77,7 +83,7 @@ public class MPlayerProxy extends ExplicitPropositionalMachine
     protected static Set<Valuation> getAllValuations()
     {
       Set<Valuation> vals = new HashSet<Valuation>();
-      ValuationIterator v_it = new ValuationIterator("play", "pause", "stop", "buffer", "decode");
+      ValuationIterator v_it = new ValuationIterator(PLAY, PAUSE, STOP, BUFFER, DECODE);
       while (v_it.hasNext())
       {
         vals.add(v_it.next());

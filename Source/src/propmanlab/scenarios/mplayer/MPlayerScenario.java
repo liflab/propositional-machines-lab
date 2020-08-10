@@ -21,10 +21,8 @@ import static propmanlab.AccessControlledStreamExperiment.BEST_EFFORT;
 import static propmanlab.AccessControlledStreamExperiment.PROXY;
 
 import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.cep.propman.ConcreteMultiEvent;
 import ca.uqac.lif.cep.propman.ExplicitPropositionalMachine;
 import ca.uqac.lif.cep.propman.StatelessPropositionalMachine;
-import ca.uqac.lif.cep.propman.SymbolicMultiEvent;
 import ca.uqac.lif.json.JsonFalse;
 import ca.uqac.lif.json.JsonTrue;
 import ca.uqac.lif.labpal.Region;

@@ -26,6 +26,13 @@ import ca.uqac.lif.cep.propman.Valuation;
 import java.util.HashSet;
 import java.util.Set;
 
+import static propmanlab.scenarios.mplayer.MPlayerSource.PAUSE;
+import static propmanlab.scenarios.mplayer.MPlayerSource.STOP;
+
+/**
+ * Blurs the STOP and PAUSE events into the fuzzier multi-event
+ * "stop or pause".
+ */
 public class BlurStopPause extends MultiEventFunction
 {
   /**
@@ -63,18 +70,18 @@ public class BlurStopPause extends MultiEventFunction
     {
       throw new FunctionException("No valuation in the event");
     }
-    if (v.get("stop") == Value.FALSE && v.get("pause") == Value.FALSE)
+    if (v.get(STOP) == Value.FALSE && v.get(PAUSE) == Value.FALSE)
     {
       // Event is neither 'stop' nor 'pause'; leave it as is
       return x;
     }
     Valuation v1 = new Valuation(v);
-    v1.put("stop", Value.TRUE);
-    v1.put("pause", Value.FALSE);
+    v1.put(STOP, Value.TRUE);
+    v1.put(PAUSE, Value.FALSE);
     valuations.add(v1);
     Valuation v2 = new Valuation(v);
-    v2.put("stop", Value.FALSE);
-    v2.put("pause", Value.TRUE);
+    v2.put(STOP, Value.FALSE);
+    v2.put(PAUSE, Value.TRUE);
     valuations.add(v1);
     valuations.add(v2);
     ConcreteMultiEvent ce = new ConcreteMultiEvent(valuations);
